@@ -1,0 +1,97 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   SysData.cpp                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/02/20 04:16:14 by okamili           #+#    #+#             */
+/*   Updated: 2024/02/20 04:49:43 by okamili          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "SysData.hpp"
+
+SysData::SysData(void)
+{
+	this->_maxBodySize = 4096;
+	this->_CGI = "";
+	this->_CGI_Ext = "";
+	this->_UseCGI = false;
+	this->_DevMode = true;
+	this->_LogPath = "./source/webserve.log";
+}
+
+SysData::~SysData(void)
+{
+	if (this->_LogFile.is_open())
+		this->_LogFile.close();
+}
+
+void	SysData::setMaxBodySize(const size_t newSize)
+{
+	this->_maxBodySize = newSize;
+}
+
+void	SysData::setCGI(const std::string &CGI_Program, const std::string &CGI_Extention)
+{
+	if (CGI_Program.empty() || CGI_Extention.empty())
+	{
+		this->_CGI = "";
+		this->_CGI_Ext = "";
+		this->_UseCGI = false;
+		return ;
+	}
+	this->_CGI = CGI_Program;
+	this->_CGI_Ext = CGI_Extention;
+	this->_UseCGI = true;
+}
+
+void	SysData::setLogPath(const std::string &newLogPath)
+{
+	if (this->_LogFile.is_open())
+		this->_LogFile.close();
+	this->_LogPath = newLogPath;
+}
+
+void	SysData::setDevMode(bool status)
+{
+	this->_DevMode = status;
+}
+
+size_t		SysData::getMaxSize(void) const
+{
+	return (this->_maxBodySize);
+}
+
+bool	SysData::use_CGI(void) const
+{
+	return (this->_UseCGI);
+}
+
+const std::string	&SysData::get_CGI(void) const
+{
+	return (this->_CGI);
+}
+
+const std::string	&SysData::get_CGI_Ext(void) const
+{
+	return (this->_CGI_Ext);
+}
+
+const std::string	&SysData::getLogPath(void) const
+{
+	return (this->_LogPath);
+}
+
+std::fstream	&SysData::getLogStream(void)
+{
+	if (!this->_LogFile.is_open())
+		this->_LogFile.open(_LogPath.c_str(), std::ios::out | std::ios::app);
+	return (this->_LogFile);
+}
+
+bool	SysData::DevMode(void) const
+{
+	return (this->_DevMode);
+}

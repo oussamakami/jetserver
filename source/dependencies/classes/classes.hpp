@@ -1,27 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
+/*   classes.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/20 03:50:48 by okamili           #+#    #+#             */
-/*   Updated: 2024/02/20 04:47:45 by okamili          ###   ########.fr       */
+/*   Created: 2024/02/20 03:52:53 by okamili           #+#    #+#             */
+/*   Updated: 2024/02/20 03:53:12 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include <iostream>
-# include "source/dependencies/dependencies.hpp"
+#ifndef CLASSES_HPP
+# define CLASSES_HPP
 
-SysData	*global::system = new SysData();
+# include "SysData/SysData.hpp"
 
-int main(int argc, char **argv)
+
+/**
+ * @brief A namespace housing global configurations that determine the behavior of code components.
+ * 
+ * @note "system" configuration pertains to core system components, encompassing logging and CGI functionalities.
+ * 
+ */
+namespace global
 {
-	if (argc > 2)
-		return (2);
-	if (argc == 2)
-		return (1);
-		
-	std::cout << global::system->getLogPath() << "\n";
-	return (0);
+    extern SysData		*system;
 }
+
+#endif

@@ -1,6 +1,7 @@
 CXX			=	c++
 CXXFLAGS	=	-std=c++98 -g
-FILES		=	main.cpp
+CLASSES		=	source/dependencies/classes/SysData/SysData.cpp
+FILES		=	$(CLASSES) main.cpp
 OBJ			=	$(FILES:.cpp=.o)
 NAME		=	webserver
 
