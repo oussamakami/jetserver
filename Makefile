@@ -1,7 +1,11 @@
 CXX			=	c++
 CXXFLAGS	=	-std=c++98 -g
-CLASSES		=	source/dependencies/classes/SysData/SysData.cpp
-FILES		=	$(CLASSES) main.cpp
+
+CLASSES		=	classes/SysData/SysData.cpp classes/Locations/Locations.cpp
+
+PARSING		=	
+
+FILES		=	$(CLASSES) $(PARSING) main.cpp
 OBJ			=	$(FILES:.cpp=.o)
 NAME		=	webserver
 
