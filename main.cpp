@@ -6,11 +6,10 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 03:50:48 by okamili           #+#    #+#             */
-/*   Updated: 2024/02/20 04:47:45 by okamili          ###   ########.fr       */
+/*   Updated: 2024/02/20 05:19:14 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include <iostream>
 # include "source/dependencies/dependencies.hpp"
 
 SysData	*global::system = new SysData();
