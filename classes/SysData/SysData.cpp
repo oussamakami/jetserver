@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 04:16:14 by okamili           #+#    #+#             */
-/*   Updated: 2024/02/20 06:19:39 by okamili          ###   ########.fr       */
+/*   Updated: 2024/02/29 09:13:00 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 SysData::SysData(void)
 {
-	this->_maxBodySize = 0;
+	this->_maxBodySize = 8192;
 	this->_CGI = "";
 	this->_CGI_Ext = "";
 	this->_UseCGI = false;
@@ -33,9 +33,9 @@ void	SysData::setMaxBodySize(const size_t newSize)
 	this->_maxBodySize = newSize;
 }
 
-void	SysData::setCGI(const std::string &CGI_Program, const std::string &CGI_Extention)
+void	SysData::set_CGI(const std::string &CGI_Program)
 {
-	if (CGI_Program.empty() || CGI_Extention.empty())
+	if (CGI_Program.empty())
 	{
 		this->_CGI = "";
 		this->_CGI_Ext = "";
@@ -43,8 +43,22 @@ void	SysData::setCGI(const std::string &CGI_Program, const std::string &CGI_Exte
 		return ;
 	}
 	this->_CGI = CGI_Program;
+	if (!this->_CGI_Ext.empty())
+		this->_UseCGI = true;
+}
+
+void	SysData::set_CGI_Ext(const std::string &CGI_Extention)
+{
+	if (CGI_Extention.empty())
+	{
+		this->_CGI = "";
+		this->_CGI_Ext = "";
+		this->_UseCGI = false;
+		return ;
+	}
 	this->_CGI_Ext = CGI_Extention;
-	this->_UseCGI = true;
+	if (!this->_CGI.empty())
+		this->_UseCGI = true;
 }
 
 void	SysData::setLogPath(const std::string &newLogPath)
@@ -84,8 +98,10 @@ const std::string	&SysData::getLogPath(void) const
 	return (this->_LogPath);
 }
 
-std::fstream	&SysData::getLogStream(void)
+std::ostream	&SysData::getLogStream(void)
 {
+	if (this->_LogPath.empty())
+		return (std::cout);
 	if (!this->_LogFile.is_open())
 		this->_LogFile.open(_LogPath.c_str(), std::ios::out | std::ios::app);
 	return (this->_LogFile);

@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 03:26:09 by okamili           #+#    #+#             */
-/*   Updated: 2024/02/20 04:24:34 by okamili          ###   ########.fr       */
+/*   Updated: 2024/02/29 09:13:16 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,8 @@
  * 
  * @param setMaxBodySize Define the maximum size, in bytes, for packets that the client can transmit.
  * @param setLogPath Specify the log file to be utilized by the system.
- * @param setCGI Specify the CGI extension to handle.
+ * @param set_CGI Specify the CGI program.
+ * @param set_CGI_Ext Specify the CGI extension to handle.
  * @param setDevMode Specify the DevMode status.
  * @param getMaxSize Retrieve the maximum packet size allowed for clients.
  * @param get_CGI Retrieve the CGI Program currently configured for handling the CGI scripts.
@@ -67,12 +68,17 @@ class SysData
 		 */
 		void	setLogPath(const std::string &newLogPath);
 		/**
-		 * @brief Specify the CGI extension to handle.
+		 * @brief Specify the CGI program
 		 * 
-		 * @param newCGI CGI program for executing the scripts.
+		 * @param  CGI_Program program for executing the scripts.
+		 */
+		void	set_CGI(const std::string &CGI_Program);
+		/**
+		 * @brief Specify the CGI extention
+		 * 
 		 * @param CGI_Extention Extension used for CGI scripts.
 		 */
-		void	setCGI(const std::string &CGI_Program, const std::string &CGI_Extention);
+		void	set_CGI_Ext(const std::string &CGI_Extention);
 		/**
 		 * @brief Set the DevMode.
 		 * 
@@ -114,7 +120,7 @@ class SysData
 		 * 
 		 * @return std::fstream& A reference to the stream.
 		 */
-		std::fstream		&getLogStream(void);
+		std::ostream		&getLogStream(void);
 		/**
 		 * @brief Check the DevMode status.
 		 * 

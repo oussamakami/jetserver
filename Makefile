@@ -3,9 +3,13 @@ CXXFLAGS	=	-std=c++98 -g
 
 CLASSES		=	classes/SysData/SysData.cpp classes/Locations/Locations.cpp
 
-PARSING		=	
+TOOLS		=	tools/notify.cpp tools/terminate.cpp tools/trim.cpp\
+				tools/split.cpp
 
-FILES		=	$(CLASSES) $(PARSING) main.cpp
+PARSING		=	parsing/parsingChecks.cpp parsing/parseSystem.cpp\
+				parsing/loadConfig.cpp
+
+FILES		=	$(CLASSES) $(TOOLS) $(PARSING) main.cpp
 OBJ			=	$(FILES:.cpp=.o)
 NAME		=	webserver
 
