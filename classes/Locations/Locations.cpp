@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/25 02:38:09 by okamili           #+#    #+#             */
-/*   Updated: 2024/02/25 05:03:07 by okamili          ###   ########.fr       */
+/*   Updated: 2024/02/29 13:03:53 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,20 @@ Locations::Locations(bool sysDevMode)
 
 Locations::~Locations(void)
 {
-	this->_Index->clear();
-	delete this->_Index;
+	Locations	*head = this;
+	Locations	*tmp;
+
+	while (head->_Prev)
+		head = head->_Prev;
+	while (head)
+	{
+		head->_Index->clear();
+		delete head->_Index;
+		tmp = head->_Next;
+		if (head != this)
+			delete head;
+		head = tmp;
+	}
 }
 
 void	Locations::setPath(const std::string &Path)
@@ -137,3 +149,25 @@ bool	Locations::useMethod(const std::string &methodName) const
 	}
 }
 
+Locations	*Locations::getNext(void)
+{
+	return (this->_Next);
+}
+
+Locations	*Locations::getPrev(void)
+{
+	return (this->_Prev);
+}
+
+bool	Locations::isIndex(const std::string &fileName) const
+{
+	std::vector<std::string>::iterator it = this->_Index->begin();
+
+	while (it != this->_Index->end())
+	{
+		if (*it == fileName)
+			return (true);
+		it++;
+	}
+	return (false);
+}
