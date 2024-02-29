@@ -1,7 +1,8 @@
 CXX			=	c++
 CXXFLAGS	=	-std=c++98 -g
 
-CLASSES		=	classes/SysData/SysData.cpp classes/Locations/Locations.cpp
+CLASSES		=	classes/SysData/SysData.cpp classes/Locations/Locations.cpp\
+				classes/Servers/Servers.cpp
 
 TOOLS		=	tools/notify.cpp tools/terminate.cpp tools/trim.cpp\
 				tools/split.cpp
