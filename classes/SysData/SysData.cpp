@@ -6,11 +6,12 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 04:16:14 by okamili           #+#    #+#             */
-/*   Updated: 2024/03/01 09:57:41 by okamili          ###   ########.fr       */
+/*   Updated: 2024/03/01 19:59:32 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "SysData.hpp"
+#include "../../tools/tools.hpp"
 
 SysData::SysData(void)
 {
@@ -100,10 +101,21 @@ const std::string	&SysData::getLogPath(void) const
 
 std::ostream	&SysData::getLogStream(void)
 {
-	if (this->_LogPath.empty())
-		return (std::cout);
+	static bool	printedWarning;
+
 	if (!this->_LogFile.is_open())
+	{
 		this->_LogFile.open(_LogPath.c_str(), std::ios::out | std::ios::app);
+		if (this->_LogPath.empty() || !this->_LogFile.is_open())
+		{
+			if (!printedWarning)
+			{
+				notify(std::cout, "%WUnable to open the log file or log file not provided. Falling back to standard output.");
+				printedWarning = true;
+			}
+			return (std::cout);
+		}
+	}
 	return (this->_LogFile);
 }
 

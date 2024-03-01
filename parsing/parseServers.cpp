@@ -6,13 +6,13 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 14:55:23 by okamili           #+#    #+#             */
-/*   Updated: 2024/03/01 10:31:30 by okamili          ###   ########.fr       */
+/*   Updated: 2024/03/01 19:21:55 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.hpp"
 
-static bool	checkOption(std::vector<std::string> option, size_t fileLine)
+static bool	checkOption(const std::vector<std::string> &option, size_t &fileLine)
 {
 	if (option.at(0) == "START_ROUTE" || option.at(0) == "END_SERVER")
 	{
@@ -29,73 +29,113 @@ static bool	checkOption(std::vector<std::string> option, size_t fileLine)
 	return (true);
 }
 
-static bool	assignServerConf(std::vector<std::string> option, size_t fileLine)
+static void	setDomainName(Servers *Data, const std::string &DomainName)
 {
-	static Servers	*Data;
-	std::stringstream ss;
-	size_t	numHolder;
+	std::vector<std::string>			Domains;
+	std::vector<std::string>::iterator	it;
 	
-	std::fstream file;
-	
+	Domains = extractOption(DomainName, "|");
+	it = Domains.begin();
+	while (it != Domains.end())
+	{
+		Data->addDomain(*it);
+		it++;
+	}
+}
+
+static bool	setPortValue(Servers *Data, const std::string &Value, size_t &fileLine)
+{
+	std::stringstream	ss;
+	size_t				PortValue;
+
+	if (!hasOneValue("DEVMODE", Value, fileLine))
+		return (false);
+
+	ss << Value;
+	ss >> PortValue;
+	if (ss.fail() || Value[0] == '-' || PortValue > 65535)
+	{
+		notify(std::cerr, "%EInvalid \"PORT\" value at line %d.", fileLine);
+		return (false);
+	}
+	Data->setPort(PortValue);
+	return (true);
+}
+
+static bool	extractErrorCode(const std::string &optionName, size_t &fileLine, size_t &HTTPCode)
+{
+	std::stringstream	ss;
+	size_t				ErrorCode;
+
+	ss << optionName.substr(6);
+	ss >> ErrorCode;
+	if (ss.fail() || ErrorCode < 400 || ErrorCode > 599)
+	{
+		notify(std::cerr, "%EInvalid \"%s\" option at line %d.", optionName, fileLine);
+		notify(std::cerr, "%IOptions are only valid for HTTP statuses between ERROR_4XX and ERROR_5XX.");
+		return (false);
+	}
+	HTTPCode = ErrorCode;
+	return (true);
+}
+
+static bool	setErrorPage(Servers *Data, const std::vector<std::string> &option, size_t &fileLine)
+{
+	std::fstream	file;
+	size_t			HTTPCode;
+
+	if (!extractErrorCode(option.at(0), fileLine, HTTPCode) ||
+		!hasOneValue(option.at(0), option.at(1), fileLine))
+		return (false);
+	file.open(option.at(1).c_str());
+	if (!file.is_open())
+	{
+		notify(std::cerr, "%EPath for \"%s\" at line %d not found.", option.at(0).c_str(), fileLine);
+		return (false);
+	}
+	Data->addError(HTTPCode, option.at(1));
+	return (true);
+}
+
+static bool	assignServerConf(const std::vector<std::string> &option, std::ifstream &source, size_t &fileLine)
+{
+	static Servers		*Data;
+
 	if (!Data)
 	{
 		Data = new Servers;
-		if (!global::servers)
-			global::servers = Data;
-		else
+		if (global::servers)
+		{
+			Data->setHost(global::servers->getHost());
+			Data->setPort(global::servers->getPort());
 			global::servers->setNext(Data);
+		}
+		else
+			global::servers = Data;
 	}
 	
-	if (option.at(0) == "HOST")
-		Data->setHost(option.at(1));
-	else if (option.at(0) == "PORT")
+	if (option.at(0) == "END_SERVER")
+		Data = NULL;
+	else if (option.at(0) == "START_ROUTE")
+		return (parseRoutes(source, ++fileLine));
+	else if (option.at(0) == "HOST")
 	{
-		ss.str("");
-		ss << option.at(1);
-		ss >> numHolder;
-		if (ss.fail() || option.at(1)[0] == '-' || numHolder > 65535)
-		{
-			notify(std::cerr, "%EInvalid \"PORT\" value at line %d.", fileLine);
+		if (!hasOneValue(option.at(0), option.at(1), fileLine))
 			return (false);
-		}
-		Data->setPort(numHolder);
+		Data->setHost(option.at(1));
 	}
 	else if (option.at(0) == "DOMAIN")
+		setDomainName(Data, option.at(1));
+	else if (option.at(0) == "PORT")
 	{
-		std::vector<std::string> domains;
-		std::vector<std::string>::iterator it;
-		
-		domains = extractOption(option.at(1), "|");
-		it = domains.begin();
-		while (it != domains.end())
-		{
-			Data->addDomain(*it);
-			it++;
-		}
-		domains.clear();
+		if (!setPortValue(Data, option.at(1), fileLine))
+			return (false);
 	}
 	else if (option.at(0).length() == 9 && option.at(0).substr(0, 6) == "ERROR_")
 	{
-		ss.str("");
-		ss << option.at(0).substr(6);
-		ss >> numHolder;
-		if (ss.fail() || numHolder < 400 || numHolder > 599)
-		{
-			notify(std::cerr, "%EInvalid \"%s\" option at line %d.", option.at(0).c_str(), fileLine);
-			notify(std::cerr, "%IOptions are only valid for HTTP statuses between ERROR_4XX and ERROR_5XX.");
+		if (!setErrorPage(Data, option, fileLine))
 			return (false);
-		}
-		file.open(option.at(1).c_str());
-		if (!file.is_open())
-		{
-			notify(std::cerr, "%EPath for \"%s\" at line %d not found.", option.at(0).c_str(), fileLine);
-			return (false);
-		}
-		file.close();
-		Data->addError(numHolder, option.at(1));
 	}
-	else if (option.at(0) == "END_SERVER")
-		Data = NULL;
 	else
 	{
 		notify(std::cerr, "%EUnknown option \"%s\" encountered at line %d.",
@@ -103,29 +143,28 @@ static bool	assignServerConf(std::vector<std::string> option, size_t fileLine)
 		return (false);
 	}
 	return (true);
-	// else if (option.at(0) == "START_ROUTE")
-	// {
-	// 	Data = NULL;
-	// 	notify(std::cout, "%Wadded server, need to program route dev.");
-	// }
 }
 
 bool	parseServers(std::ifstream &source, size_t &fileLine)
 {
-	std::string		holder;
-	std::vector<std::string> option;
+	std::string					trimedStr;
+	std::vector<std::string>	option;
 
-	for (fileLine++; getline(source, holder); fileLine++)
+	while(getline(source, trimedStr))
 	{
-		holder = trim(holder, "\t\r\n ");
-		if (holder.empty() || holder[0] == '#')
+		trimedStr = trim(trimedStr, "\t\r\n\"'; |");
+		if (trimedStr.empty() || trimedStr[0] == '#')
 			continue;
+
 		option.clear();
-		option = extractOption(holder, "=");
-		if (!checkOption(option, fileLine) || !assignServerConf(option, fileLine))
+		option = extractOption(trimedStr, "=");
+
+		if (!checkOption(option, fileLine) || !assignServerConf(option, source, fileLine))
 			return (false);
+
 		if (option.at(0) == "END_SERVER")
 			break;
+		++fileLine;
 	}
 	return (true);
 }

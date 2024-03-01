@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/25 02:38:09 by okamili           #+#    #+#             */
-/*   Updated: 2024/03/01 08:58:44 by okamili          ###   ########.fr       */
+/*   Updated: 2024/03/02 05:55:24 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ Locations::Locations(bool sysDevMode)
 	this->_Redirection = "";
 	this->_Prev = NULL;
 	this->_Next = NULL;
-	this->_Index = new std::vector<std::string>;
 }
 
 Locations::~Locations(void)
@@ -48,10 +47,11 @@ Locations::~Locations(void)
 	Locations	*head = this;
 	Locations	*tmp;
 
+	if (head->_Prev)
+		head->_Prev->_Next = NULL;
+
 	while (head)
 	{
-		head->_Index->clear();
-		delete head->_Index;
 		tmp = head->_Next;
 		if (head != this)
 			delete head;
@@ -71,10 +71,10 @@ void	Locations::setRoot(const std::string &Root)
 
 void	Locations::addIndex(const std::string &Index)
 {
-	this->_Index->push_back(Index);
+	this->_Index.insert(Index);
 }
 
-void	Locations::setMethod(const std::string &methodName, bool status)
+bool	Locations::setMethod(const std::string &methodName, bool status)
 {
 	switch (FindMethod(methodName))
 	{
@@ -86,7 +86,11 @@ void	Locations::setMethod(const std::string &methodName, bool status)
 			break;
 		case 2:
 			this->_UseDelete = status;
+			break;
+		default:
+			return (false);
 	}
+	return (true);
 }
 
 void	Locations::setBrowsing(bool status)
@@ -159,13 +163,10 @@ Locations	*Locations::getPrev(void)
 
 bool	Locations::isIndex(const std::string &fileName) const
 {
-	std::vector<std::string>::iterator it = this->_Index->begin();
+	return (this->_Index.find(fileName) != this->_Index.end());
+}
 
-	while (it != this->_Index->end())
-	{
-		if (*it == fileName)
-			return (true);
-		it++;
-	}
-	return (false);
+const std::set<std::string>	&Locations::getIndexs(void) const
+{
+	return (this->_Index);
 }

@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 12:31:32 by okamili           #+#    #+#             */
-/*   Updated: 2024/03/01 10:40:29 by okamili          ###   ########.fr       */
+/*   Updated: 2024/03/01 20:01:45 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,10 @@ Servers::~Servers(void)
 {
 	Servers	*head = this;
 	Servers *tmp;
-	
+
+	if (head->_Prev)
+		head->_Prev->_Next = NULL;
+
 	while (head)
 	{
 		tmp = head->_Next;

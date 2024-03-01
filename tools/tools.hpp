@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/25 10:54:20 by okamili           #+#    #+#             */
-/*   Updated: 2024/02/29 14:33:47 by okamili          ###   ########.fr       */
+/*   Updated: 2024/03/01 12:42:05 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include "../classes/classes.hpp"
 # include <cstdarg>
 # include <cstdlib>
+# include <vector>
 
 /**
  * @brief Print a notification message to a stream.

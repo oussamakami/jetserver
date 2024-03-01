@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 09:20:18 by okamili           #+#    #+#             */
-/*   Updated: 2024/03/01 10:40:43 by okamili          ###   ########.fr       */
+/*   Updated: 2024/03/01 12:52:23 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ class Servers
 		const std::string			getError(const size_t errorNum);
 		Servers						*getNext(void);
 		Servers						*getPrev(void);
+		//still need functions for getting the routes...
 };
 
 #endif

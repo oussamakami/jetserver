@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 03:50:48 by okamili           #+#    #+#             */
-/*   Updated: 2024/03/01 10:45:48 by okamili          ###   ########.fr       */
+/*   Updated: 2024/03/01 20:03:31 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,8 @@ int main(int argc, char **argv)
 	std::cout << "PORT = " << global::servers->getPort() << "\n";
 	std::cout << "HOST = " << global::servers->getHost() << "\n";
 	std::set<std::string> holder = global::servers->getDomains();
+	holder.clear();
+	holder = global::servers->getDomains();
 	std::set<std::string>::iterator it = holder.begin();
 	while (it != holder.end())
 	{
@@ -58,8 +60,7 @@ int main(int argc, char **argv)
 	}
 	std::cout << "DOMAIN FACEBOOK.com EXIST = " << global::servers->hasDomain("FACEBOOK.com") << "\n";
 	std::cout << "DOMAIN EXAMPLE3.com EXIST = " << global::servers->hasDomain("EXAMPLE3.com") << "\n";
-	std::cout << "ERROR_502 = " << global::servers->getError(502) << "\n";
-	holder.clear();
+	std::cout << "ERROR_502 = " << global::servers->getError(502) << "\n\n";
 	std::cout << "\nServer2:\n";
 	Servers *next = global::servers->getNext();
 	holder = next->getDomains();

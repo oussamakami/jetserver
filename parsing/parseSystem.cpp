@@ -6,30 +6,31 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 05:46:02 by okamili           #+#    #+#             */
-/*   Updated: 2024/03/01 10:32:01 by okamili          ###   ########.fr       */
+/*   Updated: 2024/03/01 19:22:27 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.hpp"
 
-std::vector<std::string> extractOption(const std::string &holder, const std::string &sep)
+std::vector<std::string> extractOption(const std::string &trimedStr, const std::string &sep)
 {
-	std::vector<std::string> result;
+	std::vector<std::string>			Result;
+	std::vector<std::string>::iterator	it;
 
-	result = split(holder, sep);
-	std::vector<std::string>::iterator it = result.begin();
-	while (it != result.end())
+	Result = split(trimedStr, sep);
+	it = Result.begin();
+	while (it != Result.end())
 	{
 		*it = trim(*it, "\t\r\n\"'; |");
-		if (*it == "")
-			it = result.erase(it);
+		if ((*it).empty())
+			it = Result.erase(it);
 		else
 			it++;
 	}
-	return (result);
+	return (Result);
 }
 
-static bool	checkOption(std::vector<std::string> option, size_t fileLine)
+static bool	checkOption(const std::vector<std::string> &option, size_t &fileLine)
 {
 	if (option.size() != 2)
 	{
@@ -39,58 +40,73 @@ static bool	checkOption(std::vector<std::string> option, size_t fileLine)
 	return (true);
 }
 
-static bool	assignSystemConf(std::vector<std::string> option, size_t fileLine)
+static bool	setBodySize(const std::string &Value, size_t &fileLine)
 {
-	std::stringstream ss;
-	size_t	size;
-	std::string upperBool = "";
-	
+	std::stringstream	ss;
+	size_t				size;
+
+	if (!hasOneValue("BODYSIZE", Value, fileLine))
+		return (false);
+	ss << Value;
+	ss >> size;
+	if (ss.fail() || Value[0] == '-')
+	{
+		notify(std::cerr, "%EInvalid \"BODYSIZE\" value at line %d.", fileLine);
+		return (false);
+	}
+	global::system->setMaxBodySize(size);
+	return (true);
+}
+
+static bool	setDevMode(const std::string &Value, size_t &fileLine)
+{
+	std::string	temp = "";
+
+	if (!hasOneValue("DEVMODE", Value, fileLine))
+		return (false);
+
+	for (size_t index = 0; Value[index]; index++)
+		temp += std::toupper(Value[index]);
+	if (temp == "TRUE")
+		global::system->setDevMode(true);
+	else if (temp == "FALSE")
+		global::system->setDevMode(false);
+	else
+	{
+		notify(std::cerr, "%EInvalid \"DEVMODE\" value at line %d.", fileLine);
+		return (false);
+	}
+	return (true);
+}
+static bool	assignSystemConf(const std::vector<std::string> &option, size_t &fileLine)
+{
 	if (option.at(0) == "LOG")
+	{
+		if (!hasOneValue(option.at(0), option.at(1), fileLine))
+			return (false);
 		global::system->setLogPath(option.at(1));
+	}
 	else if (option.at(0) == "CGI")
 	{
-		if (split(option.at(1), " ").size() != 1 || split(option.at(1), ",").size() != 1)
-		{
-			notify(std::cerr, "%EInvalid \"CGI\" value at line %d.", fileLine);
-			notify(std::cerr, "%IThe \"CGI\" option accepts only one value.");
+		if (!hasOneValue(option.at(0), option.at(1), fileLine))
 			return (false);
-		}
 		global::system->set_CGI(option.at(1));
 	}
 	else if (option.at(0) == "CGI_EXTENTION")
 	{
-		if (split(option.at(1), " ").size() != 1 || split(option.at(1), ",").size() != 1)
-		{
-			notify(std::cerr, "%EInvalid \"CGI_EXTENTION\" value at line %d.", fileLine);
-			notify(std::cerr, "%IThe \"CGI_EXTENTION\" option accepts only one value.");
+		if (!hasOneValue(option.at(0), option.at(1), fileLine))
 			return (false);
-		}
 		global::system->set_CGI_Ext(trim(option.at(1), "."));
 	}
 	else if (option.at(0) == "BODYSIZE")
 	{
-		ss << option.at(1);
-		ss >> size;
-		if (ss.fail() || option.at(1)[0] == '-')
-		{
-			notify(std::cerr, "%EInvalid \"BODYSIZE\" value at line %d.", fileLine);
+		if (!setBodySize(option.at(1), fileLine))
 			return (false);
-		}
-		global::system->setMaxBodySize(size);
 	}
 	else if (option.at(0) == "DEVMODE")
 	{
-		for (size_t index = 0; option.at(1)[index]; index++)
-			upperBool += std::toupper(option.at(1)[index]);
-		if (upperBool == "TRUE")
-			global::system->setDevMode(true);
-		else if (upperBool == "FALSE")
-			global::system->setDevMode(false);
-		else
-		{
-			notify(std::cerr, "%EInvalid \"DEVMODE\" value at line %d.", fileLine);
+		if (!setDevMode(option.at(1), fileLine))
 			return (false);
-		}
 	}
 	else
 	{
@@ -103,20 +119,24 @@ static bool	assignSystemConf(std::vector<std::string> option, size_t fileLine)
 
 bool	parseSystem(std::ifstream &source, size_t &fileLine)
 {
-	std::string		holder;
-	std::vector<std::string> option;
+	std::vector<std::string>	option;
+	std::string					trimedStr;
 
-	for (fileLine++; getline(source, holder); fileLine++)
+	while (getline(source, trimedStr))
 	{
-		holder = trim(holder, "\t\r\n ");
-		if (holder.empty() || holder[0] == '#')
+		trimedStr = trim(trimedStr, "\t\r\n\"'; |");
+		if (trimedStr.empty() || trimedStr[0] == '#')
 			continue;
-		if (holder == "END_SYSTEM")
+
+		if (trimedStr == "END_SYSTEM")
 			break;
+
 		option.clear();
-		option = extractOption(holder, "=");
+		option = extractOption(trimedStr, "=");
+
 		if (!checkOption(option, fileLine) || !assignSystemConf(option, fileLine))
 			return (false);
+		++fileLine;
 	}
 	return (true);
 }

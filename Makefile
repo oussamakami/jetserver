@@ -8,7 +8,8 @@ TOOLS		=	tools/notify.cpp tools/terminate.cpp tools/trim.cpp\
 				tools/split.cpp
 
 PARSING		=	parsing/parsingChecks.cpp parsing/parseSystem.cpp\
-				parsing/parseServers.cpp parsing/loadConfig.cpp
+				parsing/parseServers.cpp parsing/parseRoutes.cpp\
+				parsing/loadConfig.cpp
 
 FILES		=	$(CLASSES) $(TOOLS) $(PARSING) main.cpp
 OBJ			=	$(FILES:.cpp=.o)

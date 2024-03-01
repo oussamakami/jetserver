@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/25 09:16:01 by okamili           #+#    #+#             */
-/*   Updated: 2024/03/01 06:53:36 by okamili          ###   ########.fr       */
+/*   Updated: 2024/03/01 18:56:56 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,26 +15,27 @@
 bool	loadConfig(std::string confPath)
 {
 	std::ifstream	source;
-	std::string		holder;
+	std::string		trimedStr;
 
 	if (!isConfigFile(confPath) || !fileExist(confPath))
 		return (false);
 
 	source.open(confPath.c_str());
-	for (size_t fileLine = 1; getline(source, holder); fileLine++)
+	for (size_t fileLine = 1; getline(source, trimedStr); fileLine++)
 	{
-		holder = trim(holder, "\t\r\n ");
-		if (holder.empty() || holder[0] == '#')
+		trimedStr = trim(trimedStr, "\t\r\n\"'; |");
+		if (trimedStr.empty() || trimedStr[0] == '#')
 			continue;
-		if (holder == "START_SYSTEM" && !parseSystem(source, fileLine))
+		if (trimedStr == "START_SYSTEM" && !parseSystem(source, ++fileLine))
 			return (false);
-		else if (holder == "START_SERVER" && !parseServers(source, fileLine))
+		else if (trimedStr == "START_SERVER" && !parseServers(source, ++fileLine))
 			return (false);
-		else if (holder != "START_SYSTEM" && holder != "START_SERVER")
+		else if (trimedStr != "START_SYSTEM" && trimedStr != "START_SERVER")
 		{
-			notify(std::cerr, "%EUnknown option \"%s\" on line %d.", holder.c_str(), fileLine);
+			notify(std::cerr, "%EUnknown option \"%s\" on line %d.", trimedStr.c_str(), fileLine);
 			return (false);
 		}
 	}
+	notify(std::cout, "%IConfiguration successfully loaded.");
 	return (true);
 }
