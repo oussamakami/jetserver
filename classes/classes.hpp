@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 03:52:53 by okamili           #+#    #+#             */
-/*   Updated: 2024/02/25 11:18:43 by okamili          ###   ########.fr       */
+/*   Updated: 2024/03/01 07:39:22 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include "SysData/SysData.hpp"
 # include "Locations/Locations.hpp"
+# include "Servers/Servers.hpp"
 
 
 /**
@@ -26,6 +27,7 @@
 namespace global
 {
     extern SysData		*system;
+	extern Servers		*servers;
 }
 
 #endif

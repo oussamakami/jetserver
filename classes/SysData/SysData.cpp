@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 04:16:14 by okamili           #+#    #+#             */
-/*   Updated: 2024/02/29 09:13:00 by okamili          ###   ########.fr       */
+/*   Updated: 2024/03/01 09:57:41 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 SysData::SysData(void)
 {
-	this->_maxBodySize = 8192;
+	this->_maxBodySize = 16384;
 	this->_CGI = "";
 	this->_CGI_Ext = "";
 	this->_UseCGI = false;

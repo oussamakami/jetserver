@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/25 09:16:01 by okamili           #+#    #+#             */
-/*   Updated: 2024/02/29 07:44:58 by okamili          ###   ########.fr       */
+/*   Updated: 2024/03/01 06:53:36 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,14 @@ bool	loadConfig(std::string confPath)
 		if (holder.empty() || holder[0] == '#')
 			continue;
 		if (holder == "START_SYSTEM" && !parseSystem(source, fileLine))
+			return (false);
+		else if (holder == "START_SERVER" && !parseServers(source, fileLine))
+			return (false);
+		else if (holder != "START_SYSTEM" && holder != "START_SERVER")
 		{
-			source.close();
+			notify(std::cerr, "%EUnknown option \"%s\" on line %d.", holder.c_str(), fileLine);
 			return (false);
 		}
 	}
-	source.close();
 	return (true);
 }

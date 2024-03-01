@@ -6,21 +6,21 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 05:46:02 by okamili           #+#    #+#             */
-/*   Updated: 2024/02/29 12:45:42 by okamili          ###   ########.fr       */
+/*   Updated: 2024/03/01 10:32:01 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.hpp"
 
-static std::vector<std::string> extractOption(std::string holder)
+std::vector<std::string> extractOption(const std::string &holder, const std::string &sep)
 {
 	std::vector<std::string> result;
 
-	result = split(holder, "=");
+	result = split(holder, sep);
 	std::vector<std::string>::iterator it = result.begin();
 	while (it != result.end())
 	{
-		*it = trim(*it, "\t\r\n\"'; ");
+		*it = trim(*it, "\t\r\n\"'; |");
 		if (*it == "")
 			it = result.erase(it);
 		else
@@ -114,7 +114,7 @@ bool	parseSystem(std::ifstream &source, size_t &fileLine)
 		if (holder == "END_SYSTEM")
 			break;
 		option.clear();
-		option = extractOption(holder);
+		option = extractOption(holder, "=");
 		if (!checkOption(option, fileLine) || !assignSystemConf(option, fileLine))
 			return (false);
 	}

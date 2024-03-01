@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/25 02:38:09 by okamili           #+#    #+#             */
-/*   Updated: 2024/02/29 13:03:53 by okamili          ###   ########.fr       */
+/*   Updated: 2024/03/01 08:58:44 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,6 @@ Locations::~Locations(void)
 	Locations	*head = this;
 	Locations	*tmp;
 
-	while (head->_Prev)
-		head = head->_Prev;
 	while (head)
 	{
 		head->_Index->clear();

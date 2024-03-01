@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/25 09:16:11 by okamili           #+#    #+#             */
-/*   Updated: 2024/02/29 14:51:32 by okamili          ###   ########.fr       */
+/*   Updated: 2024/03/01 10:32:24 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,9 @@ bool	isConfigFile(std::string path);
  */
 bool	fileExist(std::string path);
 
+
+std::vector<std::string> extractOption(const std::string &holder, const std::string &sep);
+
 /**
  * @brief Extract system configuration from the provided input stream
  * 		  and load it into the global namespace.
@@ -43,7 +46,7 @@ bool	fileExist(std::string path);
  */
 bool	parseSystem(std::ifstream &source, size_t &fileLine);
 
-
+bool	parseServers(std::ifstream &source, size_t &fileLine);
 bool	loadConfig(std::string confPath);
 
 
