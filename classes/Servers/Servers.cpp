@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 12:31:32 by okamili           #+#    #+#             */
-/*   Updated: 2024/03/01 20:01:45 by okamili          ###   ########.fr       */
+/*   Updated: 2024/03/02 19:50:59 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ Servers::~Servers(void)
 	}
 }
 
-void	Servers::setPort(const size_t PortNum)
+void	Servers::setPort(const uint16_t PortNum)
 {
 	this->_Port = PortNum;
 }
@@ -84,7 +84,7 @@ void	Servers::setNext(Servers *nextServer)
 	nextServer->_Prev = tail;
 }
 
-size_t	Servers::getPort(void) const
+uint16_t	Servers::getPort(void) const
 {
 	return (this->_Port);
 }
@@ -98,15 +98,10 @@ static const std::string	generateErrorPage(const size_t errorNum)
 {
 	std::stringstream	result;
 
-	result << "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"UTF-8\">";
-	result << "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">";
-	result << "<title>HTTP STATUS " << errorNum;
-	result << "</title><style>* {margin: 0;padding: 0;box-sizing: border-box;color: #fff;}";
-	result << "body {height: 100vh;width: 100vw;background: #130635;padding: 2em;}";
-	result << "body > section {width: 100\%;height: 95\%;display: grid;place-content: center;}";
-	result << "h1 {font-size: 10em;text-align: center;font-family: sans-serif;line-height: .8em;}";
-	result << "h3 {font-family: monospace;}</style></head><body><section><h1>" << errorNum;
-	result << "<br>Error!!</h1></section><h3>webServer v1.0</h3></body></html>";
+	result << "<!DOCTYPE html><html lang=\"en\"><head><title>HTTP " << errorNum;
+	result << "</title></head><body><center><h1 style=\"font-family: sans-serif;\">";
+	result << "HTTP Error Code: " << errorNum << "</h1><hr><h3 style=\"font-family:";
+	result << " monospace;\">webServer v1.0</h3></center></body></html>";
 
 	return (result.str());
 }

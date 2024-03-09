@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 03:26:09 by okamili           #+#    #+#             */
-/*   Updated: 2024/03/01 19:53:17 by okamili          ###   ########.fr       */
+/*   Updated: 2024/03/02 17:06:13 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 
 # include <iostream>
 # include <fstream>
+# include <vector>
+# include <unistd.h>
 
 
 /**
@@ -48,6 +50,7 @@ class SysData
 		bool			_UseCGI;
 
 		bool			_DevMode;
+		std::vector<int>	sockets;
 	public:
 		/**
 		 * @brief Initialize the system data with default values.
@@ -79,6 +82,9 @@ class SysData
 		 * @param CGI_Extention Extension used for CGI scripts.
 		 */
 		void	set_CGI_Ext(const std::string &CGI_Extention);
+
+		void	addSocket(int socketFd);
+
 		/**
 		 * @brief Set the DevMode.
 		 * 
@@ -121,6 +127,9 @@ class SysData
 		 * @return std::fstream& A reference to the stream.
 		 */
 		std::ostream		&getLogStream(void);
+
+		const std::vector<int>	&getSockets(void) const;
+
 		/**
 		 * @brief Check the DevMode status.
 		 * 

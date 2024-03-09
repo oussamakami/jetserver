@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 04:16:14 by okamili           #+#    #+#             */
-/*   Updated: 2024/03/01 19:59:32 by okamili          ###   ########.fr       */
+/*   Updated: 2024/03/09 17:41:05 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,19 @@ SysData::SysData(void)
 
 SysData::~SysData(void)
 {
+	std::vector<int>::iterator	it;
+
 	if (this->_LogFile.is_open())
 		this->_LogFile.close();
+
+	notify(std::cout, "%IClosing Socket connections.");
+
+	it = this->sockets.begin();
+	while (it != this->sockets.end())
+	{
+		close(*it);
+		it++;
+	}
 }
 
 void	SysData::setMaxBodySize(const size_t newSize)
@@ -67,6 +78,12 @@ void	SysData::setLogPath(const std::string &newLogPath)
 	if (this->_LogFile.is_open())
 		this->_LogFile.close();
 	this->_LogPath = newLogPath;
+}
+
+void	SysData::addSocket(int socketFd)
+{
+	if (socketFd != 1)
+		this->sockets.push_back(socketFd);
 }
 
 void	SysData::setDevMode(bool status)
@@ -117,6 +134,11 @@ std::ostream	&SysData::getLogStream(void)
 		}
 	}
 	return (this->_LogFile);
+}
+
+const std::vector<int>	&SysData::getSockets(void) const
+{
+	return (this->sockets);	
 }
 
 bool	SysData::DevMode(void) const

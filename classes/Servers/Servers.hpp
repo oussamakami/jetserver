@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 09:20:18 by okamili           #+#    #+#             */
-/*   Updated: 2024/03/01 12:52:23 by okamili          ###   ########.fr       */
+/*   Updated: 2024/03/02 09:49:15 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,12 @@
 # include <map>
 # include <fstream>
 # include <sstream>
+# include <stdint.h>
 
 class Servers
 {
 	private:
-		size_t							_Port;
+		uint16_t						_Port;
 		std::string						_Host;
 		std::set<std::string>			_Domain;
 		std::map<size_t, std::string>	_ErrorPages;
@@ -32,13 +33,13 @@ class Servers
 	public:
 		Servers(void);
 		~Servers(void);
-		void	setPort(const size_t PortNum);
+		void	setPort(const uint16_t PortNum);
 		void	setHost(const std::string &Host);
 		void	addDomain(const std::string &DomainName);
 		void	addError(const size_t errorNum, const std::string &errorPath);
 		void	setRoutes(Locations *Route);
 		void	setNext(Servers *nextServer);
-		size_t						getPort(void) const;
+		uint16_t					getPort(void) const;
 		const std::string			&getHost(void) const;
 		const bool					hasDomain(const std::string &DomainName) const;
 		const std::set<std::string>	&getDomains(void) const;
