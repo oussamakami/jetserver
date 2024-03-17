@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 04:16:14 by okamili           #+#    #+#             */
-/*   Updated: 2024/03/09 17:41:05 by okamili          ###   ########.fr       */
+/*   Updated: 2024/03/17 03:38:22 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,16 @@ SysData::~SysData(void)
 	if (this->_LogFile.is_open())
 		this->_LogFile.close();
 
-	notify(std::cout, "%IClosing Socket connections.");
-
 	it = this->sockets.begin();
 	while (it != this->sockets.end())
+	{
+		if (it == this->sockets.begin())
+			notify(std::cout, "%IClosing Socket connections.");
+		close(*it);
+		it++;
+	}
+	it = this->clientsFD.begin();
+	while (it != this->clientsFD.end())
 	{
 		close(*it);
 		it++;
@@ -82,8 +88,14 @@ void	SysData::setLogPath(const std::string &newLogPath)
 
 void	SysData::addSocket(int socketFd)
 {
-	if (socketFd != 1)
+	if (socketFd != -1)
 		this->sockets.push_back(socketFd);
+}
+
+void	SysData::addClient(int clientFd)
+{
+	if (clientFd != -1)
+		this->clientsFD.push_back(clientFd);
 }
 
 void	SysData::setDevMode(bool status)
@@ -139,6 +151,11 @@ std::ostream	&SysData::getLogStream(void)
 const std::vector<int>	&SysData::getSockets(void) const
 {
 	return (this->sockets);	
+}
+
+const std::vector<int>	&SysData::getClients(void) const
+{
+	return (this->clientsFD);
 }
 
 bool	SysData::DevMode(void) const

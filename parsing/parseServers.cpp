@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 14:55:23 by okamili           #+#    #+#             */
-/*   Updated: 2024/03/01 19:21:55 by okamili          ###   ########.fr       */
+/*   Updated: 2024/03/17 01:27:32 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ static bool	extractErrorCode(const std::string &optionName, size_t &fileLine, si
 	ss >> ErrorCode;
 	if (ss.fail() || ErrorCode < 400 || ErrorCode > 599)
 	{
-		notify(std::cerr, "%EInvalid \"%s\" option at line %d.", optionName, fileLine);
+		notify(std::cerr, "%EInvalid \"%s\" option at line %d.", optionName.c_str(), fileLine);
 		notify(std::cerr, "%IOptions are only valid for HTTP statuses between ERROR_4XX and ERROR_5XX.");
 		return (false);
 	}

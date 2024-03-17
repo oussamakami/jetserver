@@ -11,7 +11,7 @@ PARSING		=	parsing/parsingChecks.cpp parsing/parseSystem.cpp\
 				parsing/parseServers.cpp parsing/parseRoutes.cpp\
 				parsing/loadConfig.cpp
 
-NETWORK		=	network/setSockets.cpp
+NETWORK		=	network/setSockets.cpp network/handleConnections.cpp
 
 FILES		=	$(CLASSES) $(TOOLS) $(PARSING) $(NETWORK) main.cpp
 OBJ			=	$(FILES:.cpp=.o)
