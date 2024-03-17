@@ -6,15 +6,15 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 03:50:48 by okamili           #+#    #+#             */
-/*   Updated: 2024/03/17 02:48:10 by okamili          ###   ########.fr       */
+/*   Updated: 2024/03/17 07:00:15 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "parsing/parsing.hpp"
 # include "network/network.hpp"
 
-SysData	*global::system = new SysData();
-Servers	*global::servers = NULL;
+SysData	*global::system = new SysData;
+std::vector<Servers *>	*global::servers = new std::vector<Servers *>;
 
 static void handleArgs(int argc, char **argv)
 {

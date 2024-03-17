@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/02 08:03:54 by okamili           #+#    #+#             */
-/*   Updated: 2024/03/17 03:26:50 by okamili          ###   ########.fr       */
+/*   Updated: 2024/03/17 06:56:59 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,15 @@ static std::map<std::string, std::set<uint16_t> > extractInterfaces(void)
 {
 	std::set<uint16_t>							holder;
 	std::map<std::string, std::set<uint16_t> >	result;
-
-	for (Servers *head = global::servers; head; head = head->getNext())
+	std::vector<Servers *>::iterator			server;
+	
+	server = global::servers->begin();
+	while (server != global::servers->end())
 	{
-		if (result.find(head->getHost()) == result.end())
-			result[head->getHost()] = holder;
-		result[head->getHost()].insert(head->getPort());
+		if (result.find((*server)->getHost()) == result.end())
+			result[(*server)->getHost()] = holder;
+		result[(*server)->getHost()].insert((*server)->getPort());
+		server++;
 	}
 	return (result);
 }

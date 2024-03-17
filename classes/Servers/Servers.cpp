@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 12:31:32 by okamili           #+#    #+#             */
-/*   Updated: 2024/03/02 19:50:59 by okamili          ###   ########.fr       */
+/*   Updated: 2024/03/17 06:41:17 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,26 +16,17 @@ Servers::Servers(void)
 {
 	this->_Port = 8080;
 	this->_Host = "0.0.0.0";
-	this->_Routes = NULL;
-	this->_Next = NULL;
-	this->_Prev = NULL;
 }
 
 Servers::~Servers(void)
 {
-	Servers	*head = this;
-	Servers *tmp;
+	std::vector<Locations *>::iterator it;
 
-	if (head->_Prev)
-		head->_Prev->_Next = NULL;
-
-	while (head)
+	it = this->_Routes.begin();
+	while (it != this->_Routes.end())
 	{
-		tmp = head->_Next;
-		delete head->_Routes;
-		if (head != this)
-			delete head;
-		head = tmp;
+		delete (*it);
+		it++;
 	}
 }
 
@@ -66,22 +57,7 @@ void	Servers::addError(const size_t errorNum, const std::string &errorPath)
 
 void	Servers::setRoutes(Locations *Route)
 {
-	if (!this->_Routes)
-		this->_Routes = Route;
-	else
-		this->_Routes->setNext(Route);
-}
-
-void	Servers::setNext(Servers *nextServer)
-{
-	Servers *tail = this;
-
-	if (!nextServer)
-		return ;
-	while (tail->_Next)
-		tail = tail->_Next;
-	tail->_Next = nextServer;
-	nextServer->_Prev = tail;
+	this->_Routes.push_back(Route);
 }
 
 uint16_t	Servers::getPort(void) const
@@ -136,14 +112,4 @@ const std::string	Servers::getError(const size_t errorNum)
 		return (result.str());
 	}
 	return (generateErrorPage(errorNum));
-}
-
-Servers	*Servers::getNext(void)
-{
-	return (this->_Next);
-}
-
-Servers	*Servers::getPrev(void)
-{
-	return (this->_Prev);
 }

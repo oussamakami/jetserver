@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 14:55:23 by okamili           #+#    #+#             */
-/*   Updated: 2024/03/17 01:27:32 by okamili          ###   ########.fr       */
+/*   Updated: 2024/03/17 06:17:41 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,14 +104,12 @@ static bool	assignServerConf(const std::vector<std::string> &option, std::ifstre
 	if (!Data)
 	{
 		Data = new Servers;
-		if (global::servers)
+		if (!global::servers->empty())
 		{
-			Data->setHost(global::servers->getHost());
-			Data->setPort(global::servers->getPort());
-			global::servers->setNext(Data);
+			Data->setHost(global::servers->at(0)->getHost());
+			Data->setPort(global::servers->at(0)->getPort());
 		}
-		else
-			global::servers = Data;
+		global::servers->push_back(Data);
 	}
 	
 	if (option.at(0) == "END_SERVER")

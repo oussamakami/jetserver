@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 11:41:51 by okamili           #+#    #+#             */
-/*   Updated: 2024/03/02 05:58:43 by okamili          ###   ########.fr       */
+/*   Updated: 2024/03/17 06:37:47 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ static bool	assignRouteConf(const std::vector<std::string> &option, size_t &file
 	if (!Route)
 	{
 		Route = new Locations(global::system->DevMode());
-		global::servers->setRoutes(Route);
+		global::servers->back()->setRoutes(Route);
 	}
 
 	if (option.at(0) == "END_ROUTE")
@@ -113,7 +113,7 @@ static bool	assignRouteConf(const std::vector<std::string> &option, size_t &file
 	{
 		if (!hasOneValue(option.at(0), option.at(1), fileLine))
 			return (false);
-		Route->setPath(option.at(1));
+		Route->setRoot(option.at(1));
 	}
 	else if (option.at(0) == "INDEX")
 		setIndexValues(Route, option.at(1));

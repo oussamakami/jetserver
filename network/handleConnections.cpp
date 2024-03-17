@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 02:46:04 by okamili           #+#    #+#             */
-/*   Updated: 2024/03/17 04:43:31 by okamili          ###   ########.fr       */
+/*   Updated: 2024/03/17 06:58:51 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,11 +48,11 @@ static void	prossessReq(void)
 	
 }
 
-static void prossessRespond(void)
-{
-	std::string hello = "HTTP/1.1 200 OK\nContent-Type: text/html\n\n";
-	hello += global::servers->getError(500);
-}
+// static void prossessRespond(void)
+// {
+// 	std::string hello = "HTTP/1.1 200 OK\nContent-Type: text/html\n\n";
+// 	hello += global::servers->getError(500);
+// }
 
 void	handleConnections(void)
 {

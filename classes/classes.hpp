@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 03:52:53 by okamili           #+#    #+#             */
-/*   Updated: 2024/03/17 02:13:38 by okamili          ###   ########.fr       */
+/*   Updated: 2024/03/17 05:55:33 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@
 namespace global
 {
     extern SysData		*system;
-	extern Servers		*servers;
+	extern std::vector<Servers *>		*servers;
 }
 
 #endif

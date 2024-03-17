@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/25 02:38:09 by okamili           #+#    #+#             */
-/*   Updated: 2024/03/09 17:35:58 by okamili          ###   ########.fr       */
+/*   Updated: 2024/03/17 06:12:50 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,25 +38,11 @@ Locations::Locations(bool sysDevMode)
 	this->_isRedirect = false;
 	this->_BrowsDir = sysDevMode;
 	this->_Redirection = "";
-	this->_Prev = NULL;
-	this->_Next = NULL;
 }
 
 Locations::~Locations(void)
 {
-	Locations	*head = this;
-	Locations	*tmp;
-
-	if (head->_Prev)
-		head->_Prev->_Next = NULL;
-
-	while (head)
-	{
-		tmp = head->_Next;
-		if (head != this)
-			delete head;
-		head = tmp;
-	}
+	
 }
 
 void	Locations::setPath(const std::string &Path)
@@ -104,18 +90,6 @@ void	Locations::setRedirection(const std::string &redirectionUrl)
 	this->_isRedirect = !(redirectionUrl.empty());
 }
 
-void	Locations::setNext(Locations *nextRoute)
-{
-	Locations *tail = this;
-
-	if (!nextRoute)
-		return ;
-	while (tail->_Next)
-		tail = tail->_Next;
-	tail->_Next = nextRoute;
-	nextRoute->_Prev = tail;
-}
-
 const std::string	&Locations::getPath(void) const
 {
 	return (this->_PathReq);
@@ -149,16 +123,6 @@ bool	Locations::useMethod(const std::string &methodName) const
 		default:
 			return (false);
 	}
-}
-
-Locations	*Locations::getNext(void)
-{
-	return (this->_Next);
-}
-
-Locations	*Locations::getPrev(void)
-{
-	return (this->_Prev);
 }
 
 bool	Locations::isIndex(const std::string &fileName) const
