@@ -1,31 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   network.hpp                                        :+:      :+:    :+:   */
+/*   startServers.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/02 07:54:24 by okamili           #+#    #+#             */
-/*   Updated: 2024/03/30 09:05:47 by okamili          ###   ########.fr       */
+/*   Created: 2024/03/17 02:46:04 by okamili           #+#    #+#             */
+/*   Updated: 2024/03/30 09:01:58 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef NETWORK_HPP
-# define NETWORK_HPP
+#include "network.hpp"
 
-# include <sys/types.h>
-# include <sys/socket.h>
-# include <netinet/in.h>
-# include <arpa/inet.h>
-# include <fcntl.h>
-# include "../classes/classes.hpp"
-# include "../tools/tools.hpp"
-
-void	setSockets(void);
-
-void	prossessReq(void);
-bool	parseReq(int clientFD, std::map<int, RequestData> &packets);
-
-void	startServers(void);
-
-#endif
+void	startServers(void)
+{
+	setSockets();
+	while(true)
+		prossessReq();
+}

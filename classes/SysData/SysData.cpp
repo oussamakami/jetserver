@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 04:16:14 by okamili           #+#    #+#             */
-/*   Updated: 2024/03/17 03:38:22 by okamili          ###   ########.fr       */
+/*   Updated: 2024/03/30 08:44:49 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,23 +25,17 @@ SysData::SysData(void)
 
 SysData::~SysData(void)
 {
-	std::vector<int>::iterator	it;
+	std::vector<pollfd>::iterator	it;
 
 	if (this->_LogFile.is_open())
 		this->_LogFile.close();
 
-	it = this->sockets.begin();
-	while (it != this->sockets.end())
+	it = this->networkFDs.begin();
+	while (it != this->networkFDs.end())
 	{
-		if (it == this->sockets.begin())
+		if (it == this->networkFDs.begin())
 			notify(std::cout, "%IClosing Socket connections.");
-		close(*it);
-		it++;
-	}
-	it = this->clientsFD.begin();
-	while (it != this->clientsFD.end())
-	{
-		close(*it);
+		close(it->fd);
 		it++;
 	}
 }
@@ -87,15 +81,29 @@ void	SysData::setLogPath(const std::string &newLogPath)
 }
 
 void	SysData::addSocket(int socketFd)
-{
+{	
+	pollfd temp;
+
 	if (socketFd != -1)
-		this->sockets.push_back(socketFd);
+	{
+		temp.events = POLLIN;
+		temp.fd = socketFd;
+		this->networkFDs.push_back(temp);
+		this->sockets.insert(socketFd);
+	}
 }
 
-void	SysData::addClient(int clientFd)
+void	SysData::addClient(int clientFd, const std::string &clientIP)
 {
+	pollfd temp;
+
 	if (clientFd != -1)
-		this->clientsFD.push_back(clientFd);
+	{
+		temp.events = POLLIN | POLLHUP;
+		temp.fd = clientFd;
+		this->networkFDs.push_back(temp);
+		this->clientIP[clientFd] = clientIP;
+	}
 }
 
 void	SysData::setDevMode(bool status)
@@ -148,17 +156,50 @@ std::ostream	&SysData::getLogStream(void)
 	return (this->_LogFile);
 }
 
-const std::vector<int>	&SysData::getSockets(void) const
+std::set<int>	&SysData::getSockets(void)
 {
 	return (this->sockets);	
 }
 
-const std::vector<int>	&SysData::getClients(void) const
+std::vector<pollfd>	&SysData::getNetworkFDs(void)
 {
-	return (this->clientsFD);
+	return (this->networkFDs);
 }
 
 bool	SysData::DevMode(void) const
 {
 	return (this->_DevMode);
+}
+
+void	SysData::deleteClient(int clientfd)
+{
+	std::vector<pollfd>::iterator it;
+	std::map<int, std::string>::iterator holder;
+
+	holder = this->clientIP.find(clientfd);
+	if (holder == this->clientIP.end())
+		return ;
+
+	this->clientIP.erase(holder);
+	it = this->networkFDs.begin();
+	while (it != this->networkFDs.end())
+	{
+		if (it->fd == clientfd)
+		{
+			this->networkFDs.erase(it);
+			break;
+		}
+		it++;
+	}
+	close(clientfd);
+}
+
+const std::string	SysData::getClientIP(int fd)
+{
+	std::map<int, std::string>::iterator holder;
+
+	holder = this->clientIP.find(fd);
+	if (holder != this->clientIP.end())
+		return (holder->second);
+	return ("");
 }

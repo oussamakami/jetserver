@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 03:52:53 by okamili           #+#    #+#             */
-/*   Updated: 2024/03/17 05:55:33 by okamili          ###   ########.fr       */
+/*   Updated: 2024/03/28 11:35:01 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 # include "SysData/SysData.hpp"
 # include "Locations/Locations.hpp"
-# include "Servers/Servers.hpp"
+# include "RequestData/RequestData.hpp"
 
 
 /**
@@ -27,8 +27,8 @@
  */
 namespace global
 {
-    extern SysData		*system;
-	extern std::vector<Servers *>		*servers;
+    extern SysData					*system;
+	extern std::vector<Servers *>	*servers;
 }
 
 #endif

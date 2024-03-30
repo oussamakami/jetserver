@@ -6,21 +6,23 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/25 10:54:20 by okamili           #+#    #+#             */
-/*   Updated: 2024/03/02 17:06:34 by okamili          ###   ########.fr       */
+/*   Updated: 2024/03/30 09:00:08 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef TOOLS_HPP
 # define TOOLS_HPP
 
-# include "../classes/classes.hpp"
 # include <cstdarg>
 # include <cstdlib>
+# include <csignal>
+# include "../classes/classes.hpp"
 
 /**
  * @brief Print a notification message to a stream.
  * with custom formatting flags:
  * 
+ * @note %%  = The Character '%'.
  * @note %c  = Character argument.
  * @note %s  = String argument.
  * @note %d  = Integer argument.
@@ -58,5 +60,11 @@ std::vector<std::string> split(const std::string &str, const std::string &delimi
  * @param errorCode The error code to be used for program termination.
  */
 void	terminate(unsigned char errorCode);
+
+/**
+ * @brief Terminates the program and releases the global namespace upon receiving a SIGINT or SIGTERM signal.
+ * 
+ */
+void	terminateOnSignal(void);
 
 #endif

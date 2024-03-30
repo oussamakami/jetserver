@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/02 08:03:54 by okamili           #+#    #+#             */
-/*   Updated: 2024/03/17 06:56:59 by okamili          ###   ########.fr       */
+/*   Updated: 2024/03/28 16:09:07 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,16 +57,41 @@ static std::map<std::string, std::set<uint16_t> > extractBindableInterfaces(void
 	return (interfaces);
 }
 
-static int	createSocket(const std::string &Host, uint16_t Port)
+static void	configureSocket(int socketFd)
 {
-	struct sockaddr_in	addrs;
-	int					flags;
-	int					socketFd;
-	int					reuseValue;
+	int	flags;
+	int	reuseValue;
 
 	reuseValue = 1;
+	flags = fcntl(socketFd, F_GETFL, 0);
+
+	if (flags == -1 || fcntl(socketFd, F_SETFL, flags | O_NONBLOCK) == -1 ||
+		setsockopt(socketFd, SOL_SOCKET, SO_REUSEADDR, &reuseValue, sizeof(reuseValue)) == -1)
+	{
+		notify(std::cerr, "%EFailed to perform operations on the socket.");
+		close(socketFd);
+		terminate(3);
+	}
+}
+
+static void	bindSocket(int socketFd, const sockaddr_in &address)
+{
+	if (bind(socketFd, (struct sockaddr *) &address, sizeof(address)) == -1)
+	{
+		notify(std::cerr, "%EBinding the socket failed.");
+		close(socketFd);
+		terminate(3);
+	}
+}
+
+static int	createSocket(const std::string &Host, uint16_t Port)
+{
+	int					socketFd;
+	struct sockaddr_in	addrs;
+
 	addrs.sin_family = AF_INET;
 	addrs.sin_port = htons(Port);
+
 	if (inet_pton(AF_INET, Host.c_str(), &addrs.sin_addr) < 1)
 	{
 		notify(std::cerr, "%EThe host IP address is invalid or unsupported.");
@@ -80,24 +105,8 @@ static int	createSocket(const std::string &Host, uint16_t Port)
 		close(socketFd);
 		terminate(3);
 	}
-
-	setsockopt(socketFd, SOL_SOCKET, SO_REUSEADDR, &reuseValue, sizeof(reuseValue));
-
-	flags = fcntl(socketFd, F_GETFL, 0);
-	
-	if (flags == -1 || fcntl(socketFd, F_SETFL, flags | O_NONBLOCK) == -1)
-	{
-		notify(std::cerr, "%EFailed to perform operations on the socket.");
-		close(socketFd);
-		terminate(3);
-	}
-
-	if (bind(socketFd, (struct sockaddr *) &addrs, sizeof(addrs)) == -1)
-	{
-		notify(std::cerr, "%EBinding the socket failed.");
-		close(socketFd);
-		terminate(3);
-	}
+	configureSocket(socketFd);
+	bindSocket(socketFd, addrs);
 	return (socketFd);
 }
 
@@ -114,8 +123,8 @@ static void startListening(int socketFd, int queueLimit)
 void	setSockets(void)
 {
 	int														socketFd;
-	std::map<std::string, std::set<uint16_t> >::iterator	it;
 	std::map<std::string, std::set<uint16_t> >				interfaces;
+	std::map<std::string, std::set<uint16_t> >::iterator	it;
 
 	interfaces = extractBindableInterfaces();
 	it = interfaces.begin();

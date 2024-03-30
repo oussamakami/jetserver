@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 03:26:09 by okamili           #+#    #+#             */
-/*   Updated: 2024/03/17 03:36:12 by okamili          ###   ########.fr       */
+/*   Updated: 2024/03/29 15:27:07 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,9 @@
 # include <fstream>
 # include <vector>
 # include <unistd.h>
+# include <poll.h>
+# include <set>
+# include <map>
 
 
 /**
@@ -54,8 +57,9 @@ class SysData
 		bool			_UseCGI;
 
 		bool			_DevMode;
-		std::vector<int>	sockets;
-		std::vector<int>	clientsFD;
+		std::set<int>				sockets;
+		std::vector<pollfd>			networkFDs;
+		std::map<int, std::string>	clientIP;
 	public:
 		/**
 		 * @brief Initialize the system data with default values.
@@ -98,7 +102,7 @@ class SysData
 		 * 
 		 * @param socketFd client file descriptor.
 		 */
-		void	addClient(int clientFd);
+		void	addClient(int clientFd, const std::string &clientIP);
 		/**
 		 * @brief Set the DevMode.
 		 * 
@@ -146,8 +150,11 @@ class SysData
 		 * 
 		 * @return const std::vector<int>& A reference to the list.
 		 */
-		const std::vector<int>	&getSockets(void) const;
-		const std::vector<int>	&getClients(void) const;
+		std::set<int>		&getSockets(void);
+		std::vector<pollfd>	&getNetworkFDs(void);
+		const std::string	getClientIP(int fd);
+		void	deleteClient(int clientfd);
+		void	deleteClient(std::vector<pollfd>::iterator &it);
 		/**
 		 * @brief Check the DevMode status.
 		 * 

@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 03:50:48 by okamili           #+#    #+#             */
-/*   Updated: 2024/03/17 07:00:15 by okamili          ###   ########.fr       */
+/*   Updated: 2024/03/30 08:58:10 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,10 +37,8 @@ static void handleArgs(int argc, char **argv)
 
 int main(int argc, char **argv)
 {
-	
+	terminateOnSignal();
 	handleArgs(argc, argv);
-	setSockets();
-	handleConnections();
-
+	startServers();
 	terminate(0);
 }

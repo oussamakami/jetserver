@@ -1,31 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   network.hpp                                        :+:      :+:    :+:   */
+/*   terminateOnSignal.cpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/02 07:54:24 by okamili           #+#    #+#             */
-/*   Updated: 2024/03/30 09:05:47 by okamili          ###   ########.fr       */
+/*   Created: 2024/03/29 10:22:25 by okamili           #+#    #+#             */
+/*   Updated: 2024/03/29 10:26:01 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef NETWORK_HPP
-# define NETWORK_HPP
+#include "tools.hpp"
 
-# include <sys/types.h>
-# include <sys/socket.h>
-# include <netinet/in.h>
-# include <arpa/inet.h>
-# include <fcntl.h>
-# include "../classes/classes.hpp"
-# include "../tools/tools.hpp"
+static void	signalHandler(int signal)
+{
+	if (signal == SIGINT)
+		terminate(0);
+	if (signal == SIGTERM)
+		terminate(1);	
+}
 
-void	setSockets(void);
-
-void	prossessReq(void);
-bool	parseReq(int clientFD, std::map<int, RequestData> &packets);
-
-void	startServers(void);
-
-#endif
+void	terminateOnSignal(void)
+{
+	signal(SIGINT, signalHandler);
+	signal(SIGTERM, signalHandler);
+}

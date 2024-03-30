@@ -2,16 +2,17 @@ CXX			=	c++
 CXXFLAGS	=	-std=c++98 -g
 
 CLASSES		=	classes/SysData/SysData.cpp classes/Locations/Locations.cpp\
-				classes/Servers/Servers.cpp
+				classes/Servers/Servers.cpp classes/RequestData/RequestData.cpp
 
 TOOLS		=	tools/notify.cpp tools/terminate.cpp tools/trim.cpp\
-				tools/split.cpp
+				tools/split.cpp tools/terminateOnSignal.cpp
 
 PARSING		=	parsing/parsingChecks.cpp parsing/parseSystem.cpp\
 				parsing/parseServers.cpp parsing/parseRoutes.cpp\
 				parsing/loadConfig.cpp
 
-NETWORK		=	network/setSockets.cpp network/handleConnections.cpp
+NETWORK		=	network/setSockets.cpp network/processReq.cpp\
+				network/parseReq.cpp network/startServers.cpp
 
 FILES		=	$(CLASSES) $(TOOLS) $(PARSING) $(NETWORK) main.cpp
 OBJ			=	$(FILES:.cpp=.o)
