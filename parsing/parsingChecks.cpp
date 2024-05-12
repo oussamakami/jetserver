@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 05:46:06 by okamili           #+#    #+#             */
-/*   Updated: 2024/03/01 19:23:37 by okamili          ###   ########.fr       */
+/*   Updated: 2024/05/12 08:50:25 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,8 @@ bool hasOneValue(const std::string &optionName, const std::string &Value, size_t
 {
 	if (split(Value, "|").size() != 1)
 	{
+		notify(std::cout, "%IThe \"%s\" option accepts only one value.", optionName.c_str());
 		notify(std::cerr, "%EInvalid \"%s\" value at line %d.", optionName.c_str(), fileLine);
-		notify(std::cerr, "The \"%s\" option accepts only one value.", optionName.c_str());
 		return (false);
 	}
 	return (true);

@@ -5,7 +5,8 @@ CLASSES		=	classes/SysData/SysData.cpp classes/Locations/Locations.cpp\
 				classes/Servers/Servers.cpp classes/RequestData/RequestData.cpp
 
 TOOLS		=	tools/notify.cpp tools/terminate.cpp tools/trim.cpp\
-				tools/split.cpp tools/terminateOnSignal.cpp
+				tools/split.cpp tools/terminateOnSignal.cpp\
+				tools/pathCombs.cpp
 
 PARSING		=	parsing/parsingChecks.cpp parsing/parseSystem.cpp\
 				parsing/parseServers.cpp parsing/parseRoutes.cpp\

@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 14:55:23 by okamili           #+#    #+#             */
-/*   Updated: 2024/03/17 06:17:41 by okamili          ###   ########.fr       */
+/*   Updated: 2024/05/12 12:10:04 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ static bool	setPortValue(Servers *Data, const std::string &Value, size_t &fileLi
 	std::stringstream	ss;
 	size_t				PortValue;
 
-	if (!hasOneValue("DEVMODE", Value, fileLine))
+	if (!hasOneValue("PORT", Value, fileLine))
 		return (false);
 
 	ss << Value;
@@ -163,6 +163,12 @@ bool	parseServers(std::ifstream &source, size_t &fileLine)
 		if (option.at(0) == "END_SERVER")
 			break;
 		++fileLine;
+	}
+	if (!global::servers->back()->getRoute("/"))
+	{
+		notify(std::cout, "%Ithe Routes configuration for the root request path '/' is missing on one of the servers.");
+		notify(std::cerr, "%EConfiguration is incomplete.");
+		return (false);
 	}
 	return (true);
 }

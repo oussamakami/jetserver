@@ -6,12 +6,13 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 12:31:32 by okamili           #+#    #+#             */
-/*   Updated: 2024/03/17 06:41:17 by okamili          ###   ########.fr       */
+/*   Updated: 2024/05/12 12:17:11 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Servers.hpp"
-
+#include "../../tools/tools.hpp"
+ 
 Servers::Servers(void)
 {
 	this->_Port = 8080;
@@ -112,4 +113,22 @@ const std::string	Servers::getError(const size_t errorNum)
 		return (result.str());
 	}
 	return (generateErrorPage(errorNum));
+}
+
+const Locations		*Servers::getRoute(const std::string &ReqPath) const
+{
+	std::string	routePath;
+	std::vector<std::string>	reqCombs;
+
+	reqCombs = pathCombs(ReqPath);
+	for (int i = 0; i < reqCombs.size(); i++)
+	{
+		for (int j = 0; j < this->_Routes.size(); j++)
+		{
+			routePath = pathCombs(this->_Routes.at(j)->getPath()).front();
+			if (routePath == reqCombs.at(i))
+				return (this->_Routes.at(j));
+		}
+	}
+	return (NULL);
 }
