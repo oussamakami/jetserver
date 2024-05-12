@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 04:16:14 by okamili           #+#    #+#             */
-/*   Updated: 2024/03/30 08:44:49 by okamili          ###   ########.fr       */
+/*   Updated: 2024/05/12 06:34:26 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ void	SysData::addClient(int clientFd, const std::string &clientIP)
 
 	if (clientFd != -1)
 	{
-		temp.events = POLLIN | POLLHUP;
+		temp.events = POLLIN | POLLERR;
 		temp.fd = clientFd;
 		this->networkFDs.push_back(temp);
 		this->clientIP[clientFd] = clientIP;

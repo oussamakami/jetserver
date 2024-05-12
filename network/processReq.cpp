@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/28 16:10:32 by okamili           #+#    #+#             */
-/*   Updated: 2024/03/30 09:05:30 by okamili          ###   ########.fr       */
+/*   Updated: 2024/05/12 06:34:06 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,15 +69,15 @@ static void	manageClients(pollfd *clientsFDs, std::string &msg)
 				index--;
 				continue;
 			}
-			clientsFDs[index].events = POLLOUT | POLLHUP;
+			clientsFDs[index].events = POLLOUT | POLLERR;
 		}
 		else if (clientsFDs[index].revents & POLLOUT)
 		{
 			//sendResponse()
 			write(clientsFDs[index].fd, msg.c_str(), msg.length());
-			clientsFDs[index].events = POLLIN | POLLHUP;
+			clientsFDs[index].events = POLLIN | POLLERR;
 		}
-		if (clientsFDs[index].revents & POLLHUP)
+		if (clientsFDs[index].revents & POLLERR)
 		{
 			clientsFDs = closeConnection(clientsFDs[index].fd);
 			index--;
