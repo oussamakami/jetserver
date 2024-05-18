@@ -1,33 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   network.hpp                                        :+:      :+:    :+:   */
+/*   RequestParsing.hpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/02 07:54:24 by okamili           #+#    #+#             */
-/*   Updated: 2024/05/18 18:08:19 by okamili          ###   ########.fr       */
+/*   Created: 2024/05/18 12:30:06 by okamili           #+#    #+#             */
+/*   Updated: 2024/05/18 17:40:49 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef NETWORK_HPP
-# define NETWORK_HPP
+#ifndef REQUESTPARSING_HPP
+# define REQUESTPARSING_HPP
 
-# include <netinet/in.h>
-# include <arpa/inet.h>
-# include <fcntl.h>
-# include "./RequestParsing/RequestParsing.hpp"
+# include <sys/types.h>
+# include <sys/socket.h>
+# include "../../classes/classes.hpp"
+# include "../../tools/tools.hpp"
 
+bool	extractData(const std::string &packet, RequestData &Data);
+void	getServer(RequestData &Data);
 
-void	setSockets(void);
-
-void	prossessReq(void);
-
-void	startServers(void);
-
-
-
-
-void	generateResponse(int clientFD, RequestData &data);
+bool	requestParsing(int clientFD, std::map<int, RequestData> &packets);
 
 #endif

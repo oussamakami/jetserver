@@ -6,20 +6,25 @@ CLASSES		=	classes/SysData/SysData.cpp classes/Locations/Locations.cpp\
 
 TOOLS		=	tools/notify.cpp tools/terminate.cpp tools/trim.cpp\
 				tools/split.cpp tools/terminateOnSignal.cpp\
-				tools/pathCombs.cpp
+				tools/pathCombs.cpp tools/strIntConv.cpp
 
 PARSING		=	parsing/parsingChecks.cpp parsing/parseSystem.cpp\
 				parsing/parseServers.cpp parsing/parseRoutes.cpp\
 				parsing/loadConfig.cpp
 
+REQUESTS	=	network/RequestParsing/extractData.cpp network/RequestParsing/getServer.cpp\
+				network/RequestParsing/RequestParsing.cpp
+
+RESPONSE	=	network/generateResponse/generateResponse.cpp
+
 NETWORK		=	network/setSockets.cpp network/processReq.cpp\
-				network/parseReq.cpp network/startServers.cpp
+				network/startServers.cpp $(REQUESTS) $(RESPONSE)
 
 FILES		=	$(CLASSES) $(TOOLS) $(PARSING) $(NETWORK) main.cpp
 OBJ			=	$(FILES:.cpp=.o)
 NAME		=	webserver
 
-all:		$(NAME)
+all:		$(NAME) clean
 
 $(NAME):	$(OBJ)
 	$(CXX) $(CXXFLAGS) $(OBJ) -o $(NAME)

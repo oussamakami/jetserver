@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 08:00:10 by okamili           #+#    #+#             */
-/*   Updated: 2024/03/29 10:06:37 by okamili          ###   ########.fr       */
+/*   Updated: 2024/05/18 15:33:13 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,39 +27,41 @@
 # define REQUESTDATA_HPP
 
 # include <iostream>
+# include <map>
 # include "../Servers/Servers.hpp"
 
 class RequestData
 {
 	private:
-		size_t		_size;
-		std::string	_clientIP;
-		std::string _method;
-		std::string _path;
-		std::string _protocol;
-		std::string _host;
-		bool		_keep_alive;
-		Servers		*_server;
+		size_t		_Size;
+		std::string	_ClientIP;
+		std::string _Method;
+		std::string _Path;
+		std::string	_Protocol;
+		std::string	_Body;
+		std::map<std::string, std::string>	_MetaData;
+		Servers		*_Server;
 	public:
 		RequestData(void);
 		RequestData(const std::string &clientIP);
 		~RequestData(void);
 		void	setSize(size_t newsize);
-		void	setIP(const std::string &newIP);
+		void	setClientIP(const std::string &newIP);
 		void	setMethod(const std::string &method);
-		void	setProtocol(const std::string &proto);
-		void	setHost(const std::string &host);
-		void	stayAlive(bool status);
+		void	setPath(const std::string &path);
+		void	setProtocol(const std::string &protocol);
+		void	appendBody(const std::string &data);
+		void	addMetaData(const std::string &key, const std::string &value);
+		void	setServer(Servers *Data);
 
 		const size_t		getSize(void) const;
-		const std::string	getIP(void) const;
+		const std::string	getClientIP(void) const;
 		const std::string	getMethod(void) const;
 		const std::string	getPath(void) const;
 		const std::string	getProtocol(void) const;
-		const std::string	getHost(void) const;
-		const bool			isStayAlive(void) const;
-		Servers				&getServer(void);
-		
+		const std::string	getBody(void) const;
+		const std::string	getMetaData(const std::string &key) const;
+		Servers				*getServer(void);
 };
 
 #endif

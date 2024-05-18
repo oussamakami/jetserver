@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/28 16:10:32 by okamili           #+#    #+#             */
-/*   Updated: 2024/05/12 06:34:06 by okamili          ###   ########.fr       */
+/*   Updated: 2024/05/18 18:06:12 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ static bool	extractReqFD(int fd)
 	return (true);
 }
 
-static void	manageClients(pollfd *clientsFDs, std::string &msg)
+static void	manageClients(pollfd *clientsFDs)
 {
 	static std::map<int, RequestData>	packetsData;
 
@@ -63,7 +63,7 @@ static void	manageClients(pollfd *clientsFDs, std::string &msg)
 				clientsFDs = &(global::system->getNetworkFDs()[0]);
 				continue;
 			}
-			if (!parseReq(clientsFDs[index].fd, packetsData))
+			if (!requestParsing(clientsFDs[index].fd, packetsData))
 			{
 				clientsFDs = closeConnection(clientsFDs[index].fd);
 				index--;
@@ -74,7 +74,8 @@ static void	manageClients(pollfd *clientsFDs, std::string &msg)
 		else if (clientsFDs[index].revents & POLLOUT)
 		{
 			//sendResponse()
-			write(clientsFDs[index].fd, msg.c_str(), msg.length());
+			// write(clientsFDs[index].fd, msg.c_str(), msg.length());
+			generateResponse(clientsFDs[index].fd, packetsData[clientsFDs[index].fd]);
 			clientsFDs[index].events = POLLIN | POLLERR;
 		}
 		if (clientsFDs[index].revents & POLLERR)
@@ -89,12 +90,7 @@ void	prossessReq(void)
 {
 	struct pollfd	*clientsFDs;
 	
-	std::string response = "HTTP/1.1 200 OK\r\n"
-                       "Content-Type: text/html\r\n"
-                       "Content-Length: 225\r\n\r\n";
-	response += global::servers->at(0)->getError(500);
-	
-	clientsFDs = &(global::system->getNetworkFDs()[0]);
+	clientsFDs = &(global::system->getNetworkFDs().at(0));
 
 	if (poll(clientsFDs, global::system->getNetworkFDs().size(), 5) == -1)
 	{
@@ -102,5 +98,5 @@ void	prossessReq(void)
 		terminate(3);
 	}
 
-	manageClients(clientsFDs, response);
+	manageClients(clientsFDs);
 }

@@ -1,33 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   network.hpp                                        :+:      :+:    :+:   */
+/*   StringtoInt.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/02 07:54:24 by okamili           #+#    #+#             */
-/*   Updated: 2024/05/18 18:08:19 by okamili          ###   ########.fr       */
+/*   Created: 2024/05/17 09:42:56 by okamili           #+#    #+#             */
+/*   Updated: 2024/05/17 09:51:45 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef NETWORK_HPP
-# define NETWORK_HPP
+#include "tools.hpp"
 
-# include <netinet/in.h>
-# include <arpa/inet.h>
-# include <fcntl.h>
-# include "./RequestParsing/RequestParsing.hpp"
+std::string	intToString(int num)
+{
+	std::stringstream ss;
 
+	ss << num;
 
-void	setSockets(void);
+	return (ss.str());
+}
 
-void	prossessReq(void);
+int	StringToInt(const std::string &num)
+{
+	std::stringstream ss;
+	int	result = 0;
 
-void	startServers(void);
+	ss << num;
+	ss >> result;
 
-
-
-
-void	generateResponse(int clientFD, RequestData &data);
-
-#endif
+	return (result);
+}

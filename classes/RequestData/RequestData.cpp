@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/28 11:11:27 by okamili           #+#    #+#             */
-/*   Updated: 2024/03/29 10:06:21 by okamili          ###   ########.fr       */
+/*   Updated: 2024/05/18 15:32:52 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,26 +14,24 @@
 
 RequestData::RequestData(void)
 {
-	this->_clientIP = "";
-	this->_size = 0;
-	this->_method = "";
-	this->_path = "";
-	this->_protocol = "";
-	this->_host = "";
-	this->_keep_alive = false;
-	this->_server = NULL;
+	this->_Size = 0;
+	this->_ClientIP = "";
+	this->_Method = "";
+	this->_Path = "";
+	this->_Protocol = "";
+	this->_Body = "";
+	this->_Server = NULL;
 }
 
 RequestData::RequestData(const std::string &clientIP) :
-	_clientIP(clientIP)
+	_ClientIP(clientIP)
 {
-	this->_size = 0;
-	this->_method = "";
-	this->_path = "";
-	this->_protocol = "";
-	this->_host = "";
-	this->_keep_alive = false;
-	this->_server = NULL;
+	this->_Size = 0;
+	this->_Method = "";
+	this->_Path = "";
+	this->_Protocol = "";
+	this->_Body = "";
+	this->_Server = NULL;
 }
 
 RequestData::~RequestData(void)
@@ -43,73 +41,86 @@ RequestData::~RequestData(void)
 
 void	RequestData::setSize(size_t newsize)
 {
-	this->_size = newsize;
+	this->_Size = newsize;
 }
 
-void	RequestData::setIP(const std::string &newIP)
+void	RequestData::setClientIP(const std::string &newIP)
 {
-	this->_clientIP = newIP;
+	this->_ClientIP = newIP;
 }
 
 void	RequestData::setMethod(const std::string &method)
 {
 	if (method == "GET" || method == "POST" || method == "DELETE")
-		this->_method = method;
+		this->_Method = method;
 	else
-		this->_method = "";
+		this->_Method = "";
 }
 
-void	RequestData::setProtocol(const std::string &proto)
+void	RequestData::setPath(const std::string &path)
 {
-	this->_protocol = proto;
+	this->_Path = path;
 }
 
-void	RequestData::setHost(const std::string &host)
+void	RequestData::setProtocol(const std::string &protocol)
 {
-	this->_host = host;
+	this->_Protocol = protocol;
 }
 
-void	RequestData::stayAlive(bool status)
+void	RequestData::appendBody(const std::string &data)
 {
-	this->_keep_alive = status;
+	this->_Body += data;
+}
+
+void	RequestData::addMetaData(const std::string &key, const std::string &value)
+{
+	if (!key.empty() && !value.empty())
+		this->_MetaData[key] = value;
+}
+
+void	RequestData::setServer(Servers *Data)
+{
+	this->_Server = Data;
 }
 
 const size_t		RequestData::getSize(void) const
 {
-	return (this->_size);
+	return (this->_Size);
 }
 
-const std::string	RequestData::getIP(void) const
+const std::string	RequestData::getClientIP(void) const
 {
-	return (this->_clientIP);
+	return (this->_ClientIP);
 }
 
 const std::string	RequestData::getMethod(void) const
 {
-	return (this->_method);
+	return (this->_Method);
 }
 
 const std::string	RequestData::getPath(void) const
 {
-	return (this->_path);
+	return (this->_Path);
 }
 
 const std::string	RequestData::getProtocol(void) const
 {
-	return (this->_protocol);
+	return (this->_Protocol);
 }
 
-const std::string	RequestData::getHost(void) const
+const std::string	RequestData::getBody(void) const
 {
-	return (this->_host);
+	return (this->_Body);
 }
 
-const bool			RequestData::isStayAlive(void) const
+const std::string	RequestData::getMetaData(const std::string &key) const
 {
-	return (this->_keep_alive);
+	if (!key.empty() && this->_MetaData.find(key) != this->_MetaData.end())
+		return (this->_MetaData.find(key)->second);
+	return ("");
 }
 
-Servers				&RequestData::getServer(void)
+Servers				*RequestData::getServer(void)
 {
-	return (*this->_server);
+	return (this->_Server);
 }

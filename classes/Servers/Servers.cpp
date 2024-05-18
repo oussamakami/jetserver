@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 12:31:32 by okamili           #+#    #+#             */
-/*   Updated: 2024/05/12 12:17:11 by okamili          ###   ########.fr       */
+/*   Updated: 2024/05/18 16:23:18 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ void	Servers::setPort(const uint16_t PortNum)
 void	Servers::setHost(const std::string &Host)
 {
 	this->_Host = Host;
+	addDomain(this->_Host);
 }
 
 void	Servers::addDomain(const std::string &DomainName)
@@ -90,6 +91,8 @@ const bool	Servers::hasDomain(const std::string &DomainName) const
 	for (size_t index = 0; DomainName[index]; index++)
 		lowerCaseDomain += std::tolower(DomainName[index]);
 
+	if (lowerCaseDomain == this->_Host)
+		return (true);
 	return (this->_Domain.find(lowerCaseDomain) != this->_Domain.end());
 }
 
