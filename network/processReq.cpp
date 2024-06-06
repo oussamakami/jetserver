@@ -6,16 +6,15 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/28 16:10:32 by okamili           #+#    #+#             */
-/*   Updated: 2024/05/18 18:06:12 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/06 16:02:32 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "network.hpp"
 
-static pollfd	*closeConnection(int clientFD)
+static void	closeConnection(int clientFD)
 {
 	global::system->deleteClient(clientFD);
-	return (&(global::system->getNetworkFDs()[0]));
 }
 
 static std::string	getClientIp(sockaddr_in *clientData)
@@ -59,29 +58,23 @@ static void	manageClients(pollfd *clientsFDs)
 		if (clientsFDs[index].revents & POLLIN)
 		{
 			if (extractReqFD(clientsFDs[index].fd))
-			{
-				clientsFDs = &(global::system->getNetworkFDs()[0]);
-				continue;
-			}
+				break;
 			if (!requestParsing(clientsFDs[index].fd, packetsData))
 			{
-				clientsFDs = closeConnection(clientsFDs[index].fd);
-				index--;
-				continue;
+				closeConnection(clientsFDs[index].fd);
+				break;
 			}
 			clientsFDs[index].events = POLLOUT | POLLERR;
 		}
 		else if (clientsFDs[index].revents & POLLOUT)
 		{
-			//sendResponse()
-			// write(clientsFDs[index].fd, msg.c_str(), msg.length());
 			generateResponse(clientsFDs[index].fd, packetsData[clientsFDs[index].fd]);
 			clientsFDs[index].events = POLLIN | POLLERR;
 		}
 		if (clientsFDs[index].revents & POLLERR)
 		{
-			clientsFDs = closeConnection(clientsFDs[index].fd);
-			index--;
+			closeConnection(clientsFDs[index].fd);
+			break;
 		}
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 05:46:02 by okamili           #+#    #+#             */
-/*   Updated: 2024/03/01 19:22:27 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/06 16:00:08 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,12 @@ static bool	assignSystemConf(const std::vector<std::string> &option, size_t &fil
 	{
 		if (!hasOneValue(option.at(0), option.at(1), fileLine))
 			return (false);
+		if (global::system->get_CGI().empty())
+		{
+			notify(std::cerr, "%E\"CGI_EXTENTION\" is declared before \"CGI\" at line %d.",
+				fileLine);
+			return (false);
+		}
 		global::system->set_CGI_Ext(trim(option.at(1), "."));
 	}
 	else if (option.at(0) == "BODYSIZE")
