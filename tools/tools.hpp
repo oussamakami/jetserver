@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/25 10:54:20 by okamili           #+#    #+#             */
-/*   Updated: 2024/05/17 10:09:54 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/06 16:42:53 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,5 +72,6 @@ void	terminateOnSignal(void);
 std::vector<std::string> pathCombs(const std::string &path);
 std::string	intToString(int num);
 int	StringToInt(const std::string &num);
+int	executeCMD(const std::string &command, std::string &result);
 
 #endif

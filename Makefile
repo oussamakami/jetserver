@@ -2,11 +2,13 @@ CXX			=	c++
 CXXFLAGS	=	-std=c++98 -g
 
 CLASSES		=	classes/SysData/SysData.cpp classes/Locations/Locations.cpp\
-				classes/Servers/Servers.cpp classes/RequestData/RequestData.cpp
+				classes/Servers/Servers.cpp classes/RequestData/RequestData.cpp\
+				classes/ResponseData/ResponseData.cpp
 
 TOOLS		=	tools/notify.cpp tools/terminate.cpp tools/trim.cpp\
 				tools/split.cpp tools/terminateOnSignal.cpp\
-				tools/pathCombs.cpp tools/strIntConv.cpp
+				tools/pathCombs.cpp tools/strIntConv.cpp\
+				tools/executeCMD.cpp
 
 PARSING		=	parsing/parsingChecks.cpp parsing/parseSystem.cpp\
 				parsing/parseServers.cpp parsing/parseRoutes.cpp\
