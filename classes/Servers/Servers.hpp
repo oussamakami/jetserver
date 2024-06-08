@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 09:20:18 by okamili           #+#    #+#             */
-/*   Updated: 2024/05/18 15:06:51 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/08 21:45:47 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ class Servers
 		const bool					hasDomain(const std::string &DomainName) const;
 		const std::set<std::string>	&getDomains(void) const;
 		const std::string			getError(const size_t errorNum);
-		const Locations				*getRoute(const std::string &ReqPath) const;
+		Locations					*getRoute(const std::string &ReqPath);
 		//still need functions for getting the routes...
 		//add static to side functions in the whole code
 };

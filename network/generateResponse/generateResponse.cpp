@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 18:02:48 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/08 13:51:13 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/08 22:05:43 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,3 +181,23 @@ void	generateResponse(int clientFD, RequestData &data)
 	// 	notify(std::cout, "server found: %s:%d", data.getServer()->getHost().c_str(), data.getServer()->getPort());
 	// write(clientFD, response.c_str(), response.length());
 }
+
+
+
+/*
+1- request and response non blocking
+2- handle get method, response packet
+
+
+3- handle upload in request
+4- write description and clean code
+
+5- post in response packet
+6- delete in response packet
+7- cgi get
+8- cgi post
+9- cgi delete
+10- clean code ready to push
+
+
+*/

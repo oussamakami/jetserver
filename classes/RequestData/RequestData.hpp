@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 08:00:10 by okamili           #+#    #+#             */
-/*   Updated: 2024/05/18 15:33:13 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/08 21:56:53 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,14 +33,17 @@
 class RequestData
 {
 	private:
-		size_t		_Size;
-		std::string	_ClientIP;
-		std::string _Method;
-		std::string _Path;
-		std::string	_Protocol;
-		std::string	_Body;
+		size_t								_Size;
+		std::string							_ClientIP;
+		std::string 						_Method;
+		std::string 						_Path;
+		std::string 						_FullPath;
+		std::string							_Protocol;
+		std::string							_Body;
+		std::string							_QueryString;
 		std::map<std::string, std::string>	_MetaData;
 		Servers		*_Server;
+		Locations	*_Route;
 	public:
 		RequestData(void);
 		RequestData(const std::string &clientIP);
@@ -58,10 +61,12 @@ class RequestData
 		const std::string	getClientIP(void) const;
 		const std::string	getMethod(void) const;
 		const std::string	getPath(void) const;
+		const std::string	getFullPath(void) const;
 		const std::string	getProtocol(void) const;
 		const std::string	getBody(void) const;
 		const std::string	getMetaData(const std::string &key) const;
 		Servers				*getServer(void);
+		Locations			*getRoute(void);
 };
 
 #endif

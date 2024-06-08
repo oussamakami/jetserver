@@ -6,11 +6,35 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/28 11:11:27 by okamili           #+#    #+#             */
-/*   Updated: 2024/05/18 15:32:52 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/08 21:57:11 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "RequestData.hpp"
+
+static std::string	extractQueryString(std::string &path)
+{
+	std::string	QueryString;
+	
+	if (path.find_first_of('?') == std::string::npos)
+		return ("");
+	
+	QueryString = path.substr(path.find_first_of('?') + 1);
+	path = path.substr(0, path.find_first_of('?'));
+
+	return (QueryString);
+}
+
+static std::string	generateFullPath(const std::string &requestPath, const std::string &routePath)
+{
+	std::string	result;
+
+	result = routePath;
+	if (result[result.length() - 1] == '/')
+		result.erase(result.length() - 1);
+	result += requestPath;
+	return (result);
+}
 
 RequestData::RequestData(void)
 {
@@ -20,6 +44,7 @@ RequestData::RequestData(void)
 	this->_Path = "";
 	this->_Protocol = "";
 	this->_Body = "";
+	this->_QueryString = "";
 	this->_Server = NULL;
 }
 
@@ -59,7 +84,12 @@ void	RequestData::setMethod(const std::string &method)
 
 void	RequestData::setPath(const std::string &path)
 {
-	this->_Path = path;
+	std::string	filteredString;
+
+	filteredString = path;
+	
+	this->_QueryString = extractQueryString(filteredString);
+	this->_Path = filteredString;
 }
 
 void	RequestData::setProtocol(const std::string &protocol)
@@ -81,6 +111,12 @@ void	RequestData::addMetaData(const std::string &key, const std::string &value)
 void	RequestData::setServer(Servers *Data)
 {
 	this->_Server = Data;
+	
+	if (Data)
+	{
+		this->_Route = Data->getRoute(this->getPath());
+		this->_FullPath = generateFullPath(this->getPath(), this->_Route->getPath());
+	}
 }
 
 const size_t		RequestData::getSize(void) const
@@ -103,6 +139,11 @@ const std::string	RequestData::getPath(void) const
 	return (this->_Path);
 }
 
+const std::string	RequestData::getFullPath(void) const
+{
+	return (this->_FullPath);
+}
+
 const std::string	RequestData::getProtocol(void) const
 {
 	return (this->_Protocol);
@@ -120,7 +161,12 @@ const std::string	RequestData::getMetaData(const std::string &key) const
 	return ("");
 }
 
-Servers				*RequestData::getServer(void)
+Servers			*RequestData::getServer(void)
 {
 	return (this->_Server);
+}
+
+Locations		*RequestData::getRoute(void)
+{
+	return (this->_Route);
 }

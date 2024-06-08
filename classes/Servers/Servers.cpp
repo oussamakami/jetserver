@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 12:31:32 by okamili           #+#    #+#             */
-/*   Updated: 2024/05/19 11:09:39 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/08 21:46:00 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,7 +141,7 @@ const std::string	Servers::getError(const size_t errorNum)
 	return (generateErrorPage(errorNum));
 }
 
-const Locations		*Servers::getRoute(const std::string &ReqPath) const
+Locations		*Servers::getRoute(const std::string &ReqPath)
 {
 	std::string	routePath;
 	std::vector<std::string>	reqCombs;
