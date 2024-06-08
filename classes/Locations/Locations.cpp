@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/25 02:38:09 by okamili           #+#    #+#             */
-/*   Updated: 2024/03/17 06:12:50 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/08 20:33:35 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ Locations::Locations(bool sysDevMode)
 	this->_isRedirect = false;
 	this->_BrowsDir = sysDevMode;
 	this->_Redirection = "";
+	this->_HardRedirection = true;
 }
 
 Locations::~Locations(void)
@@ -90,6 +91,22 @@ void	Locations::setRedirection(const std::string &redirectionUrl)
 	this->_isRedirect = !(redirectionUrl.empty());
 }
 
+bool	Locations::setRedirectionType(const std::string &redirectionType)
+{
+	std::string	temp = "";
+
+	for (size_t index = 0; redirectionType[index]; index++)
+		temp += std::toupper(redirectionType[index]);
+
+	if (temp == "HARD")
+		this->_HardRedirection = true;
+	else if (temp == "SOFT")
+		this->_HardRedirection = false;
+	else
+		return (false);
+	return (true);
+}
+
 const std::string	&Locations::getPath(void) const
 {
 	return (this->_PathReq);
@@ -110,8 +127,20 @@ bool	Locations::isRedirection(void) const
 	return (this->_isRedirect);
 }
 
+bool	Locations::isRedirectionHard(void) const
+{
+	return (this->_HardRedirection);
+}
+
+bool	Locations::autoIndex(void) const
+{
+	return (this->_BrowsDir);
+}
+
 bool	Locations::useMethod(const std::string &methodName) const
 {
+	if (this->isRedirection() && FindMethod(methodName) >= 0)
+		return (true);
 	switch (FindMethod(methodName))
 	{
 		case 0:

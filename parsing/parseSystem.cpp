@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 05:46:02 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/06 16:00:08 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/08 20:25:43 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,7 +132,10 @@ bool	parseSystem(std::ifstream &source, size_t &fileLine)
 	{
 		trimedStr = trim(trimedStr, "\t\r\n\"'; |");
 		if (trimedStr.empty() || trimedStr[0] == '#')
+		{
+			++fileLine;
 			continue;
+		}
 
 		if (trimedStr == "END_SYSTEM")
 			break;

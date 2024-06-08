@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 11:41:51 by okamili           #+#    #+#             */
-/*   Updated: 2024/03/17 06:37:47 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/08 20:24:47 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,6 +123,17 @@ static bool	assignRouteConf(const std::vector<std::string> &option, size_t &file
 			return (false);
 		Route->setRedirection(option.at(1));
 	}
+	else if (option.at(0) == "REDIRECT_TYPE")
+	{
+		if (!hasOneValue(option.at(0), option.at(1), fileLine))
+			return (false);
+		if (!Route->setRedirectionType(option.at(1)))
+		{
+			notify(std::cout, "%IThe \"REDIRECT_TYPE\" option can only be \"HARD\" or \"SOFT\".");
+			notify(std::cerr, "%EInvalid \"REDIRECT_TYPE\" value at line %d.", fileLine);
+			return (false);
+		}
+	}
 	else if (option.at(0) == "METHODS")
 	{
 		if (!setMethods(Route, option.at(1), fileLine))
@@ -130,8 +141,7 @@ static bool	assignRouteConf(const std::vector<std::string> &option, size_t &file
 	}
 	else if (option.at(0) == "BROWSEDIR")
 	{	
-		if (!hasOneValue(option.at(0), option.at(1), fileLine) || 
-			!setBrowsingStatus(Route, option.at(1), fileLine))
+		if (!setBrowsingStatus(Route, option.at(1), fileLine))
 			return (false);
 	}
 	else
@@ -152,7 +162,10 @@ bool	parseRoutes(std::ifstream &source, size_t &fileLine)
 	{
 		trimedStr = trim(trimedStr, "\t\r\n\"'; |");
 		if (trimedStr.empty() || trimedStr[0] == '#')
+		{
+			++fileLine;
 			continue;
+		}
 
 		option.clear();
 		option = extractOption(trimedStr, "=");

@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 14:55:23 by okamili           #+#    #+#             */
-/*   Updated: 2024/05/18 15:17:42 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/08 20:25:18 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,7 +152,10 @@ bool	parseServers(std::ifstream &source, size_t &fileLine)
 	{
 		trimedStr = trim(trimedStr, "\t\r\n\"'; |");
 		if (trimedStr.empty() || trimedStr[0] == '#')
+		{
+			++fileLine;
 			continue;
+		}
 
 		option.clear();
 		option = extractOption(trimedStr, "=");

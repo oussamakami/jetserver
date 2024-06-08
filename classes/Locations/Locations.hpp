@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 05:17:56 by okamili           #+#    #+#             */
-/*   Updated: 2024/03/17 06:12:04 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/08 20:32:58 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ class Locations
 		bool						_UseDelete;
 		bool						_BrowsDir;
 		bool						_isRedirect;
+		bool						_HardRedirection;
 		std::string					_Redirection;
 	public:
 		Locations(bool sysDevMode);
@@ -37,11 +38,14 @@ class Locations
 		bool	setMethod(const std::string &methodName, bool status);
 		void	setBrowsing(bool status);
 		void	setRedirection(const std::string &redirectionUrl);
+		bool	setRedirectionType(const std::string &redirectionType);
 
 		const std::string	&getPath(void) const;
 		const std::string	&getRoot(void) const;
 		const std::string	&getRedirection(void) const;
 		bool				isRedirection(void) const;
+		bool				isRedirectionHard(void) const;
+		bool				autoIndex(void) const;
 		bool				useMethod(const std::string &methodName) const;
 		bool				isIndex(const std::string &fileName) const;
 		const std::set<std::string>	&getIndexs(void) const;
