@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/28 11:11:27 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/08 21:57:11 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/09 15:01:53 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ void	RequestData::setServer(Servers *Data)
 	if (Data)
 	{
 		this->_Route = Data->getRoute(this->getPath());
-		this->_FullPath = generateFullPath(this->getPath(), this->_Route->getPath());
+		this->_FullPath = generateFullPath(this->getPath(), this->_Route->getRoot());
 	}
 }
 

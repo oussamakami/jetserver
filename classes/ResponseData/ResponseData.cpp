@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:46:47 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/09 12:44:01 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/09 16:51:29 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,6 +120,22 @@ bool	ResponseData::_GeneratePacket(void)
 	return (true);
 }
 
+bool	ResponseData::redirect(const std::string &Path, bool isHard)
+{
+	if (Path.empty())
+		return (false);
+
+	if (isHard)
+		setStatusCode(301);
+	else
+		setStatusCode(307);
+
+	setMetaData("Location", Path);
+	setMetaData("Content-Length", "0");
+	setMetaData("Connection", "close");
+	return (true);
+}
+
 bool	ResponseData::setStatusCode(int statusCode)
 {
 	std::map<int, std::string>::iterator	holder;
@@ -188,7 +204,6 @@ ResponseData::ResponseData(void)
 	_Packet = "";
 	_requestPacket = NULL;
 	setMetaData("Server", "webServer/1.0");
-	setMetaData("ContentType", "text/html");
 }
 
 ResponseData::~ResponseData(void)

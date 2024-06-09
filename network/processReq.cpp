@@ -6,14 +6,14 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/28 16:10:32 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/09 12:44:21 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/09 16:53:04 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "network.hpp"
 
-static void	closeConnection(int clientFD, std::map<int, RequestData> requests,
-	std::map<int, ResponseData> responses)
+static void	closeConnection(int clientFD, std::map<int, RequestData> &requests,
+	std::map<int, ResponseData> &responses)
 {
 	if (requests.find(clientFD) != requests.end())
 		requests.erase(requests.find(clientFD));
@@ -85,7 +85,6 @@ static void	manageClients(pollfd *clientsFDs)
 				ResponsePackets[clientsFDs[index].fd].setRequestPacket(RequestPackets[clientsFDs[index].fd]);
 			}
 			generateResponse(clientsFDs[index].fd, ResponsePackets[clientsFDs[index].fd]);
-			std::cout << "here\n";
 			if (!ResponsePackets[clientsFDs[index].fd].isBusy())
 			{
 				closeConnection(clientsFDs[index].fd, RequestPackets, ResponsePackets);

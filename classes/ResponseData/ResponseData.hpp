@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:11:32 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/09 12:43:49 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/09 16:50:35 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ class ResponseData
 		bool		setBody(const std::string &data);
 		bool		isBusy(void);
 		bool		sendResponse(int fd);
+		bool		redirect(const std::string &Path, bool isHard);
 		void		setRequestPacket(RequestData &Packet);
 		RequestData	*getRequestPacket(void);
 	

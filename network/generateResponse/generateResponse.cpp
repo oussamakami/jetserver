@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 18:02:48 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/09 12:45:44 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/09 14:55:32 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,8 +60,9 @@ void	generateResponse(int clientFD, ResponseData &packet)
 	}
 	// ResponseData	packet(data);
 
-	packet.setStatusCode(200);
-	packet.setBody(packet.getRequestPacket()->getServer()->getError(512));
+	handleGet(packet);
+	// packet.setStatusCode(200);
+	// packet.setBody(packet.getRequestPacket()->getServer()->getError(512));
 	packet.sendResponse(clientFD);
 }
 

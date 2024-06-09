@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/06 16:22:16 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/06 18:10:56 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/09 16:57:02 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,7 @@ static int	runCMD(char **args, std::string &result)
 	{
 		close(pipeFD[0]);
 		dup2(pipeFD[1], STDOUT_FILENO);
+		dup2(pipeFD[1], STDERR_FILENO);
 		close(pipeFD[1]);
 		alarm(4);
 		execve(args[0], args, NULL);
