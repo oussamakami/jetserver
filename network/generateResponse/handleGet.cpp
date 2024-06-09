@@ -1,26 +1,14 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   RequestParsing.hpp                                 :+:      :+:    :+:   */
+/*   handleGet.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/18 12:30:06 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/09 11:45:19 by okamili          ###   ########.fr       */
+/*   Created: 2024/06/09 09:13:00 by okamili           #+#    #+#             */
+/*   Updated: 2024/06/09 09:13:18 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef REQUESTPARSING_HPP
-# define REQUESTPARSING_HPP
+#include "../network.hpp"
 
-# include <sys/types.h>
-# include <sys/socket.h>
-# include "../../classes/classes.hpp"
-# include "../../tools/tools.hpp"
-
-bool	extractData(const std::string &packet, RequestData &Data);
-void	getServer(RequestData &Data);
-
-bool	requestParsing(int clientFD, RequestData &packets);
-
-#endif

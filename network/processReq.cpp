@@ -6,14 +6,19 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/28 16:10:32 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/06 16:02:32 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/09 12:44:21 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "network.hpp"
 
-static void	closeConnection(int clientFD)
+static void	closeConnection(int clientFD, std::map<int, RequestData> requests,
+	std::map<int, ResponseData> responses)
 {
+	if (requests.find(clientFD) != requests.end())
+		requests.erase(requests.find(clientFD));
+	if (responses.find(clientFD) != responses.end())
+		responses.erase(responses.find(clientFD));
 	global::system->deleteClient(clientFD);
 }
 
@@ -51,7 +56,8 @@ static bool	extractReqFD(int fd)
 
 static void	manageClients(pollfd *clientsFDs)
 {
-	static std::map<int, RequestData>	packetsData;
+	static std::map<int, RequestData>	RequestPackets;
+	static std::map<int, ResponseData>	ResponsePackets;
 
 	for (int index = 0; index < global::system->getNetworkFDs().size(); index++)
 	{
@@ -59,21 +65,36 @@ static void	manageClients(pollfd *clientsFDs)
 		{
 			if (extractReqFD(clientsFDs[index].fd))
 				break;
-			if (!requestParsing(clientsFDs[index].fd, packetsData))
+			else
 			{
-				closeConnection(clientsFDs[index].fd);
-				break;
+				if (RequestPackets.find(clientsFDs[index].fd) == RequestPackets.end())
+					RequestPackets[clientsFDs[index].fd] = RequestData();
+				if (!requestParsing(clientsFDs[index].fd, RequestPackets[clientsFDs[index].fd]))
+				{
+					closeConnection(clientsFDs[index].fd, RequestPackets, ResponsePackets);
+					break;
+				}
 			}
 			clientsFDs[index].events = POLLOUT | POLLERR;
 		}
 		else if (clientsFDs[index].revents & POLLOUT)
 		{
-			generateResponse(clientsFDs[index].fd, packetsData[clientsFDs[index].fd]);
-			clientsFDs[index].events = POLLIN | POLLERR;
+			if (ResponsePackets.find(clientsFDs[index].fd) == ResponsePackets.end())
+			{
+				ResponsePackets[clientsFDs[index].fd] = ResponseData();
+				ResponsePackets[clientsFDs[index].fd].setRequestPacket(RequestPackets[clientsFDs[index].fd]);
+			}
+			generateResponse(clientsFDs[index].fd, ResponsePackets[clientsFDs[index].fd]);
+			std::cout << "here\n";
+			if (!ResponsePackets[clientsFDs[index].fd].isBusy())
+			{
+				closeConnection(clientsFDs[index].fd, RequestPackets, ResponsePackets);
+				break;
+			}
 		}
 		if (clientsFDs[index].revents & POLLERR)
 		{
-			closeConnection(clientsFDs[index].fd);
+			closeConnection(clientsFDs[index].fd, RequestPackets, ResponsePackets);
 			break;
 		}
 	}

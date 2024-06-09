@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 13:25:33 by okamili           #+#    #+#             */
-/*   Updated: 2024/05/18 21:16:23 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/09 12:17:39 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,33 +36,27 @@ static std::string	readReq(int clientFD)
 	return (httpPacket);
 }
 
-bool	requestParsing(int clientFD, std::map<int, RequestData> &packets)
+bool	requestParsing(int clientFD, RequestData &packetData)
 {
 	std::string	clientPacket;
-	RequestData	Data(global::system->getClientIP(clientFD));
 
 	clientPacket = readReq(clientFD);
-	Data.setSize(clientPacket.length());
-
-	if (Data.getSize() > global::system->getMaxSize())
+	if (!packetData.getClientIP().empty())
+	{
+		//parse just body
+		return (true);
+	}
+	packetData.setClientIP(global::system->getClientIP(clientFD));
+	packetData.setSize(clientPacket.length());
+	if (!extractData(clientPacket, packetData))
 		return (false);
-	
-	if (!extractData(clientPacket, Data))
-		return (false);
-
-	getServer(Data);
-
-	packets[clientFD] = Data;
-
+	getServer(packetData);
 	return (true);
 }
 
 /**
  * 
- * fix algorithm for detecting the server
  * implement parsing for upload packets
- * fix memory errors in processReq.cpp
- * start working on response
  * 
  * log only in response 
  *  

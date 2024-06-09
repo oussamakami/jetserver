@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:11:32 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/08 13:09:54 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/09 12:43:49 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 class ResponseData
 {
 	private:
-		RequestData							_requestPacket;
+		RequestData							*_requestPacket;
 	
 		std::string							_StatusCode;
 		std::map<std::string, std::string>	_MetaData;
@@ -37,14 +37,16 @@ class ResponseData
 		void								_GenerateHead(void);
 		bool								_GeneratePacket(void);
 	public:
-		ResponseData(const RequestData &Packet);
+		ResponseData(void);
 		~ResponseData(void);
-		bool	setStatusCode(int statusCode);
-		bool	setMetaData(const std::string &key, const std::string &value);
-		bool	setBody(const std::string &data);
-		bool	isBusy(void);
-		bool	sendResponse(int fd);
-		
+		bool		setStatusCode(int statusCode);
+		bool		setMetaData(const std::string &key, const std::string &value);
+		bool		setBody(const std::string &data);
+		bool		isBusy(void);
+		bool		sendResponse(int fd);
+		void		setRequestPacket(RequestData &Packet);
+		RequestData	*getRequestPacket(void);
+	
 		// bool	readFile(const std::string &Path);
 };
 

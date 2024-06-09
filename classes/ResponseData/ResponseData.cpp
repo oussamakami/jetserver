@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:46:47 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/08 13:44:09 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/09 12:44:01 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,8 +138,8 @@ bool	ResponseData::setStatusCode(int statusCode)
 
 	if (statusCode >= 400)
 	{
-		if (_requestPacket.getServer())
-			_Body = _requestPacket.getServer()->getError(statusCode);
+		if (_requestPacket && _requestPacket->getServer())
+			_Body = _requestPacket->getServer()->getError(statusCode);
 		else
 			_Body = global::servers->at(0)->getError(statusCode);
 	}
@@ -149,7 +149,7 @@ bool	ResponseData::setStatusCode(int statusCode)
 
 bool	ResponseData::sendResponse(int fd)
 {
-	size_t		bufferSize = 1024;
+	size_t		bufferSize = 182;
 	std::string	response;
 
 	if (!isBusy())
@@ -157,7 +157,6 @@ bool	ResponseData::sendResponse(int fd)
 		_GenerateHead();
 		if (!_GeneratePacket())
 			return (false);
-		std::cout << _Packet << "\n";
 	}
 	response = _Packet.substr(0, bufferSize);
 	if (send(fd, response.c_str(), response.length(), 0) == -1)
@@ -169,8 +168,7 @@ bool	ResponseData::sendResponse(int fd)
 	return (true);
 }
 
-ResponseData::ResponseData(const RequestData &Packet) :
-	_requestPacket(Packet)
+ResponseData::ResponseData(void)
 {
 	if (!_LoadMimeTypes())
 	{
@@ -188,6 +186,7 @@ ResponseData::ResponseData(const RequestData &Packet) :
 	_Head = "";
 	_Body = "";
 	_Packet = "";
+	_requestPacket = NULL;
 	setMetaData("Server", "webServer/1.0");
 	setMetaData("ContentType", "text/html");
 }
@@ -196,6 +195,17 @@ ResponseData::~ResponseData(void)
 {
 	
 }
+
+void	ResponseData::setRequestPacket(RequestData &Packet)
+{
+	_requestPacket = &Packet;
+}
+
+RequestData	*ResponseData::getRequestPacket(void)
+{
+	return (this->_requestPacket);
+}
+
 
 // bool	ResponseData::readFile(const std::string &path)
 // {
