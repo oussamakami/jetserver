@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 12:38:55 by okamili           #+#    #+#             */
-/*   Updated: 2024/05/18 15:20:06 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/10 22:59:54 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,16 @@ static bool	extractMetaData(const std::string &line, RequestData &Data)
 
 	if (splittedLine.size() != 2)
 		return (false);
-
-	Data.addMetaData(splittedLine[0], splittedLine[1]);
+	
+	if (splittedLine[0] == "Content-Type")
+	{
+		std::vector<std::string> temp = split(splittedLine[1], "; ");
+		Data.addMetaData(splittedLine[0], temp[0]);
+		temp = split(temp[1], "=");
+		Data.addMetaData(temp[0], temp[1].substr(0, temp[1].length() - 1));
+	}
+	else
+		Data.addMetaData(splittedLine[0], splittedLine[1]);
 
 	return (true);
 }

@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 13:25:33 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/10 14:28:37 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/10 23:01:07 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,19 +17,13 @@ static std::string	readReq(int clientFD)
 	int			bytesReceived;
 	int			maxBufferSize = 1024;
 	char		buffer[maxBufferSize];
-	std::string	httpPacket = "";
+	std::string	httpPacket;
 
-	while (true)
+	bytesReceived = recv(clientFD, buffer, maxBufferSize - 1, 0);
+	while (bytesReceived > 0)
 	{
-		bytesReceived = recv(clientFD, buffer, maxBufferSize - 1, 0);
-		if (bytesReceived > 0)
-		{
-			buffer[bytesReceived] = '\0';
-			httpPacket += buffer;
-			if (httpPacket.find("\r\n\r\n") != std::string::npos)
-				break;
-		}
-		else
+		httpPacket.append(buffer, bytesReceived);
+		if (httpPacket.find("\r\n\r\n") != std::string::npos)
 			break;
 	}
 
@@ -52,6 +46,11 @@ bool	requestParsing(int clientFD, RequestData &packetData)
 	if (!extractData(clientPacket, packetData))
 		return (false);
 	getServer(packetData);
+	std::cout << "===========POST METHOD DATA=========\n";
+	std::cout << "Content-Type : &"<< packetData.getMetaData("Content-Type") << "&\n";
+	std::cout << "boundary : "<< packetData.getMetaData("boundary").length() << "\n";
+	std::cout << "body : " <<clientPacket.find(packetData.getMetaData("boundary")) << "\n";
+	std::cout << "====================================\n";
 	return (true);
 }
 
