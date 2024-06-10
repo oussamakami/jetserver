@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/09 09:13:00 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/09 16:51:53 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/10 14:21:32 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ static bool	handleAutoIndex(ResponseData &Packet)
 		return (false);
 	if (!Route->autoIndex())
 	{
-		Packet.setStatusCode(404);
+		Packet.setStatusCode(403);
 		return (true);
 	}
 	Packet.setStatusCode(200);
@@ -81,7 +81,8 @@ bool	handleGet(ResponseData &Packet)
 
 	//handling file reading
 	Packet.setStatusCode(200);
-	Packet.setMetaData("ContentType", "text/plain");
-	Packet.setBody("holla babybi");
+	// Packet.setMetaData("ContentType", "text/plain");
+	// Packet.setBody("holla babybi");
+	Packet.readFile(FilePath);
 	return (true);
 }

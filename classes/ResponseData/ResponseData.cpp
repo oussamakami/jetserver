@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:46:47 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/09 16:51:29 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/10 14:34:14 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,19 @@ std::string	ResponseData::_GetPacketDate(void)
 	result << (date.tm_sec < 10 ? "0" : "") << date.tm_sec << " GMT";
 	
 	return (result.str());
+}
+
+std::string	ResponseData::_GetFileType(const std::string &filePath)
+{
+	std::string	fileExtention;
+
+	if (filePath.empty())
+		return ("text/html");
+
+	fileExtention = split(filePath, ".").back();
+	if (_MimeTypes.find(fileExtention) != _MimeTypes.end())
+		return (_MimeTypes.find(fileExtention)->second);
+	return ("application/octet-stream");
 }
 
 void	ResponseData::_GenerateHead(void)
@@ -163,9 +176,41 @@ bool	ResponseData::setStatusCode(int statusCode)
 	return (true);
 }
 
+bool	ResponseData::readFile(const std::string &path)
+{
+	std::fstream		fileStream;
+	int					bytesRead = 0;
+	char				buffer[2048];
+
+	if (path.empty())
+			return (false);
+
+	if (!fileStream.is_open())
+	{
+		fileStream.open(path.c_str(), std::ios::in | std::ios::binary);
+		fileStream.seekg(0, std::ios_base::end);
+		bytesRead = fileStream.tellg();
+		fileStream.seekg(0, std::ios_base::beg);
+		setMetaData("Content-Length", intToString(bytesRead));
+		setMetaData("Content-Type", _GetFileType(path));
+		bytesRead = 0;
+	}
+	fileStream.read(buffer, 2048);
+	bytesRead = fileStream.gcount();
+	while (bytesRead == 2048)
+	{
+		_Body.append(buffer, bytesRead);
+		fileStream.read(buffer, 2048);
+		bytesRead = fileStream.gcount();
+	}
+	_Body.append(buffer, bytesRead);
+	fileStream.close();
+	return (true);
+}
+
 bool	ResponseData::sendResponse(int fd)
 {
-	size_t		bufferSize = 182;
+	size_t		bufferSize = 1024;
 	std::string	response;
 
 	if (!isBusy())
@@ -220,28 +265,3 @@ RequestData	*ResponseData::getRequestPacket(void)
 {
 	return (this->_requestPacket);
 }
-
-
-// bool	ResponseData::readFile(const std::string &path)
-// {
-// 	std::ifstream	file;
-// 	std::string		line;
-// 	std::string		fileType;
-	
-// 	file.open(path.c_str(), std::ios::binary);
-
-// 	if (!file.is_open())
-// 	{
-// 		setStatusCode(404);
-// 		return (false);
-// 	}
-
-// 	std::ostringstream buffer;
-//     buffer << file.rdbuf();
-//     _Body = buffer.str();
-
-// 	fileType = split(path, ".").back();
-// 	if (!fileType.empty())
-// 		_ContentType = _MimeTypes.find(fileType)->second;
-// 	return (true);
-// }

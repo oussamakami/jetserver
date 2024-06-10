@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:11:32 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/09 16:50:35 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/10 13:12:44 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ class ResponseData
 		std::string							_GetPacketDate(void);
 		void								_GenerateHead(void);
 		bool								_GeneratePacket(void);
+		std::string							_GetFileType(const std::string &filePath);
 	public:
 		ResponseData(void);
 		~ResponseData(void);
@@ -48,7 +49,7 @@ class ResponseData
 		void		setRequestPacket(RequestData &Packet);
 		RequestData	*getRequestPacket(void);
 	
-		// bool	readFile(const std::string &Path);
+		bool	readFile(const std::string &Path);
 };
 
 #endif

@@ -6,19 +6,25 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/28 16:10:32 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/09 16:53:04 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/10 13:33:07 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "network.hpp"
 
-static void	closeConnection(int clientFD, std::map<int, RequestData> &requests,
-	std::map<int, ResponseData> &responses)
+static void	closeConnection(int clientFD, std::map<int, RequestData*> &requests,
+	std::map<int, ResponseData*> &responses)
 {
 	if (requests.find(clientFD) != requests.end())
+	{
+		delete requests.find(clientFD)->second;
 		requests.erase(requests.find(clientFD));
+	}
 	if (responses.find(clientFD) != responses.end())
+	{
+		delete responses.find(clientFD)->second;
 		responses.erase(responses.find(clientFD));
+	}
 	global::system->deleteClient(clientFD);
 }
 
@@ -56,8 +62,8 @@ static bool	extractReqFD(int fd)
 
 static void	manageClients(pollfd *clientsFDs)
 {
-	static std::map<int, RequestData>	RequestPackets;
-	static std::map<int, ResponseData>	ResponsePackets;
+	static std::map<int, RequestData*>	RequestPackets;
+	static std::map<int, ResponseData*>	ResponsePackets;
 
 	for (int index = 0; index < global::system->getNetworkFDs().size(); index++)
 	{
@@ -68,8 +74,8 @@ static void	manageClients(pollfd *clientsFDs)
 			else
 			{
 				if (RequestPackets.find(clientsFDs[index].fd) == RequestPackets.end())
-					RequestPackets[clientsFDs[index].fd] = RequestData();
-				if (!requestParsing(clientsFDs[index].fd, RequestPackets[clientsFDs[index].fd]))
+					RequestPackets[clientsFDs[index].fd] = new RequestData();
+				if (!requestParsing(clientsFDs[index].fd, *RequestPackets[clientsFDs[index].fd]))
 				{
 					closeConnection(clientsFDs[index].fd, RequestPackets, ResponsePackets);
 					break;
@@ -81,11 +87,11 @@ static void	manageClients(pollfd *clientsFDs)
 		{
 			if (ResponsePackets.find(clientsFDs[index].fd) == ResponsePackets.end())
 			{
-				ResponsePackets[clientsFDs[index].fd] = ResponseData();
-				ResponsePackets[clientsFDs[index].fd].setRequestPacket(RequestPackets[clientsFDs[index].fd]);
+				ResponsePackets[clientsFDs[index].fd] = new ResponseData();
+				ResponsePackets[clientsFDs[index].fd]->setRequestPacket(*RequestPackets[clientsFDs[index].fd]);
 			}
-			generateResponse(clientsFDs[index].fd, ResponsePackets[clientsFDs[index].fd]);
-			if (!ResponsePackets[clientsFDs[index].fd].isBusy())
+			generateResponse(clientsFDs[index].fd, *ResponsePackets[clientsFDs[index].fd]);
+			if (!ResponsePackets[clientsFDs[index].fd]->isBusy())
 			{
 				closeConnection(clientsFDs[index].fd, RequestPackets, ResponsePackets);
 				break;

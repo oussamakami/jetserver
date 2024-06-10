@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 13:25:33 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/09 12:17:39 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/10 14:28:37 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ bool	requestParsing(int clientFD, RequestData &packetData)
 	std::string	clientPacket;
 
 	clientPacket = readReq(clientFD);
+	std::cout << clientPacket << "\n";
 	if (!packetData.getClientIP().empty())
 	{
 		//parse just body
