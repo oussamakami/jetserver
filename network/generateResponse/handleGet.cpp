@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/09 09:13:00 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/10 14:21:32 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/11 00:44:37 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,8 +81,6 @@ bool	handleGet(ResponseData &Packet)
 
 	//handling file reading
 	Packet.setStatusCode(200);
-	// Packet.setMetaData("ContentType", "text/plain");
-	// Packet.setBody("holla babybi");
 	Packet.readFile(FilePath);
 	return (true);
 }

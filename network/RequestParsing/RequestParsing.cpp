@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 13:25:33 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/10 23:01:07 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/11 00:38:21 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,15 +19,30 @@ static std::string	readReq(int clientFD)
 	char		buffer[maxBufferSize];
 	std::string	httpPacket;
 
-	bytesReceived = recv(clientFD, buffer, maxBufferSize - 1, 0);
-	while (bytesReceived > 0)
+	while (true)
 	{
+		bytesReceived = recv(clientFD, buffer, maxBufferSize, 0);
 		httpPacket.append(buffer, bytesReceived);
 		if (httpPacket.find("\r\n\r\n") != std::string::npos)
+			break;
+		if (bytesReceived < maxBufferSize)
 			break;
 	}
 
 	return (httpPacket);
+}
+
+static void	extractBody(const std::string &packet, RequestData &data)
+{
+	std::string	boundary = data.getMetaData("boundary");
+	int			startpos = 0;
+
+	if (boundary.empty())
+		return;
+	startpos = packet.find(boundary, packet.find(boundary) + 1);
+
+	data.appendBody("--");
+	data.appendBody(packet.substr(startpos));
 }
 
 bool	requestParsing(int clientFD, RequestData &packetData)
@@ -35,22 +50,17 @@ bool	requestParsing(int clientFD, RequestData &packetData)
 	std::string	clientPacket;
 
 	clientPacket = readReq(clientFD);
-	std::cout << clientPacket << "\n";
 	if (!packetData.getClientIP().empty())
 	{
-		//parse just body
+		packetData.appendBody(clientPacket);
 		return (true);
 	}
 	packetData.setClientIP(global::system->getClientIP(clientFD));
-	packetData.setSize(clientPacket.length());
 	if (!extractData(clientPacket, packetData))
 		return (false);
+	packetData.setSize(StringToInt(packetData.getMetaData("Content-Length")));
 	getServer(packetData);
-	std::cout << "===========POST METHOD DATA=========\n";
-	std::cout << "Content-Type : &"<< packetData.getMetaData("Content-Type") << "&\n";
-	std::cout << "boundary : "<< packetData.getMetaData("boundary").length() << "\n";
-	std::cout << "body : " <<clientPacket.find(packetData.getMetaData("boundary")) << "\n";
-	std::cout << "====================================\n";
+	extractBody(clientPacket, packetData);
 	return (true);
 }
 
