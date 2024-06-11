@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 12:31:32 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/08 21:46:00 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/11 02:24:21 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,14 +33,19 @@ static bool	isIPV4(const std::string &host)
 	return (true);
 }
 
-static const std::string	generateErrorPage(const size_t errorNum)
+static const std::string	generateErrorPage(const size_t errorNum, const std::string &msg)
 {
 	std::stringstream	result;
 
 	result << "<!DOCTYPE html><html lang=\"en\"><head><title>HTTP " << errorNum;
 	result << "</title></head><body><center><h1 style=\"font-family: sans-serif;\">";
-	result << "HTTP Error Code: " << errorNum << "</h1><hr><h3 style=\"font-family:";
+	if (msg.empty())
+		result << "HTTP Error Code: " << errorNum << "</h1><hr><h3 style=\"font-family:";
+	else
+		result << errorNum << " - " << msg << "</h1><hr><h3 style=\"font-family:";
 	result << " monospace;\">webServer v1.0</h3></center></body></html>";
+	
+	
 
 	return (result.str());
 }
@@ -124,7 +129,7 @@ const std::set<std::string>	&Servers::getDomains(void) const
 	return (this->_Domain);
 }
 
-const std::string	Servers::getError(const size_t errorNum)
+const std::string	Servers::getError(const size_t errorNum, const std::string &msg)
 {
 	std::fstream		file;
 	std::stringstream	result;
@@ -138,7 +143,7 @@ const std::string	Servers::getError(const size_t errorNum)
 		file.close();
 		return (result.str());
 	}
-	return (generateErrorPage(errorNum));
+	return (generateErrorPage(errorNum, msg));
 }
 
 Locations		*Servers::getRoute(const std::string &ReqPath)

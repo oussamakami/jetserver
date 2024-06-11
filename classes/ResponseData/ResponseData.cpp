@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:46:47 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/10 14:34:14 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/11 02:20:33 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,6 +158,10 @@ bool	ResponseData::setStatusCode(int statusCode)
 	if (holder == _StatusTypes.end())
 	{
 		_StatusCode = "500 Internal Server Error";
+		if (_requestPacket && _requestPacket->getServer())
+			_Body = _requestPacket->getServer()->getError(statusCode, "Internal Server Error");
+		else
+			_Body = global::servers->at(0)->getError(statusCode, "Internal Server Error");
 		return (false);
 	}
 
@@ -168,9 +172,9 @@ bool	ResponseData::setStatusCode(int statusCode)
 	if (statusCode >= 400)
 	{
 		if (_requestPacket && _requestPacket->getServer())
-			_Body = _requestPacket->getServer()->getError(statusCode);
+			_Body = _requestPacket->getServer()->getError(statusCode, holder->second);
 		else
-			_Body = global::servers->at(0)->getError(statusCode);
+			_Body = global::servers->at(0)->getError(statusCode, holder->second);
 	}
 
 	return (true);
