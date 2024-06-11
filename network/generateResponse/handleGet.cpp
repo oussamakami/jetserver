@@ -6,33 +6,11 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/09 09:13:00 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/11 00:44:37 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/11 02:02:14 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../network.hpp"
-
-static bool	isRedirection(ResponseData	&Packet)
-{
-	Locations	*Route;
-	std::string	requestPath;
-
-	Route = Packet.getRequestPacket()->getRoute();
-	requestPath = Packet.getRequestPacket()->getPath();
-	
-	if (Route->isRedirection())
-		return (Packet.redirect(Route->getRedirection(), Route->isRedirectionHard()));
-
-	if (isFolder(Packet.getRequestPacket()->getFullPath()))
-	{
-		if (requestPath[requestPath.length() - 1] != '/')
-		{
-			requestPath += '/';
-			return (Packet.redirect(requestPath, true));
-		}
-	}
-	return (false);
-}
 
 static bool	handleAutoIndex(ResponseData &Packet)
 {
@@ -64,8 +42,6 @@ bool	handleGet(ResponseData &Packet)
 
 	RequestPath = Packet.getRequestPacket()->getPath();
 	FilePath = Packet.getRequestPacket()->getFullPath();
-	if (isRedirection(Packet))
-		return (true);
 	if (isFolder(FilePath))
 	{
 		Temp = getIndexFile(FilePath, RequestPath, Packet.getRequestPacket()->getRoute());
@@ -78,8 +54,8 @@ bool	handleGet(ResponseData &Packet)
 		Packet.setStatusCode(404);
 		return (true);
 	}
-
-	//handling file reading
+	//if cgi run cgi
+	//else 
 	Packet.setStatusCode(200);
 	Packet.readFile(FilePath);
 	return (true);
