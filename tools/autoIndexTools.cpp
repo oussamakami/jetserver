@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/09 09:07:55 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/09 16:55:28 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/27 04:41:59 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,14 +78,14 @@ bool	isFolder(const std::string &path)
 	return (trim(split(rawData, " ").back(), "\n") == "directory");
 }
 
-std::string	getIndexFile(const std::string &DirPath, const std::string &ReqPath, const Locations *route)
+std::string	getIndexFile(const std::string &DirPath, const Locations *route)
 {
 	std::vector<std::string>	files;
 	std::string					result;
 
 	result = DirPath;
 	if (!isFolder(DirPath))
-		return (ReqPath);
+		return (result);
 
 	files = getDirContent(DirPath);
 

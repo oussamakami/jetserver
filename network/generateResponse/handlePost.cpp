@@ -6,59 +6,206 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 00:57:35 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/11 01:40:20 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/27 06:16:13 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../network.hpp"
+#include "./generateResponse.hpp"
 
-/*
+#define STAT_OK		0
+#define STAT_CREAT	1
+#define STAT_ERR	2
 
------------------------------201969339419841559181262827122
-Content-Disposition: form-data; name="file"; filename="hello.txt"
-Content-Type: text/plain
-
-In the vast tapestry of existence, where time weaves its intricate patterns through the fabric of reality, each moment is a thread, each event a stitch, binding the past to the present and the future. From the cosmic dance of stars to the microscopic world of atoms, from the birth of galaxies to the flutter of a butterfly's wings, everything is connected, everything is intertwined in the intricate web of existence. We are but fleeting sparks in the grand symphony of the universe, our lives mere whispers in the eternal silence of time. Yet, in our brief moment in the sun, we have the power to shape the world, to leave our mark on the tapestry of existence. We are the architects of our own destiny, the masters of our fate. But with this power comes responsibility, for every action we take, every choice we make, ripples through the fabric of reality, shaping the world around us in ways we cannot always foresee. It is up to us to choose wisely, to act with compassion and kindness, to leave the world a better place than we found it. For in the end, it is not the wealth we amass or the power we wield that defines us, but the love we share, the kindness we show, the legacy of compassion we leave behind. So let us live each day with purpose and passion, let us strive to be the best version of ourselves, let us be the change we wish to see in the world. For in the tapestry of existence, every thread counts, every stitch matters, and together, we can create a masterpiece of love, peace, and harmony that will endure for eternity.
------------------------------201969339419841559181262827122--
-
-*/
-
-static	std::string	getSaveFileName(const std::string &body)
+static std::string	correctString(const std::string &str)
 {
-	
+	int length = 0;
+	while (str[length])
+		length++;
+	if (str.length() != length)
+		return (str.substr(0, length));
+	return (str);
 }
+
+static std::string	extractHead(const std::string &boundary, std::string &body)
+{
+	int			startPos;
+	int			endPos;
+	std::string	startBoundary;
+	std::string result;
+
+	startBoundary = "--" + boundary;
+	startPos = body.find(startBoundary);
+
+	if (startPos == std::string::npos)
+		return ("");
+
+	startPos += startBoundary.length();
+	endPos = body.find("\r\n\r\n", startPos);
+
+	if (endPos == std::string::npos)
+		return ("");
+	result = body.substr(startPos, endPos - startPos);
+	body = body.substr(result.length() + startBoundary.length() + 4);
+	if (result.find("\r\n") != std::string::npos)
+		result.erase(result.find("\r\n"), 2);
+	return (result);
+}
+
+static std::string	extractBody(const std::string &boundary, std::string &body)
+{
+	int			endPos;
+	std::string	endBoundary;
+	std::string	result;
+
+	endBoundary = "--" + boundary;
+	endPos = body.find(endBoundary);
+
+	if (endPos == std::string::npos)
+		return ("");
+	
+	result = body.substr(0, endPos);
+	body = body.substr(result.length());
+
+	endBoundary += "--";
+	endPos = body.find(endBoundary);
+	if (endPos != std::string::npos && !endPos)
+		body = "";
+	return (result.substr(0, result.length() - 2));
+}
+
+static std::map<std::string, std::string>	parseHead(const std::string &head)
+{
+	std::stringstream					headMetaData;
+	std::string							line;
+	std::vector<std::string>			list;
+	std::vector<std::string>			temp;
+	std::map<std::string, std::string>	result;
+
+	headMetaData << head;
+	while (getline(headMetaData, line))
+	{
+		list = split(line, "; ");
+		for (int i = 0; i < list.size(); i++)
+		{
+			temp = split(list.at(i), ": ");
+			if (temp.size() != 2)
+				temp = split(list.at(i), "=");
+			if (temp.size() != 2)
+				continue;
+			result[correctString(temp[0])] = trim(correctString(temp[1]), "\"");
+		}
+	}
+	return (result);
+}
+static	bool	SaveFile(const std::string &fullPath, const std::string fileName, const std::string &body)
+{
+	int							fileCount = 0;
+	std::string					customPath = fullPath + "/";
+	std::string					customName = fileName;
+	std::fstream				fileData;
+	std::vector<std::string>	dirContent = getDirContent(fullPath);
+	
+	for (int i = 0; i < dirContent.size(); i++)
+	{
+		if (customName == dirContent.at(i))
+		{
+			customName = "(" + intToString(++fileCount) + ")-" + fileName;
+			i = -1;
+		}
+	}
+	customPath += customName;
+	fileData.open(customPath.c_str(), std::ios::out | std::ios::binary);
+	if (!fileData.is_open())
+		return (false);
+	fileData << body;
+	fileData.close();
+	return (true);
+}
+
+static int	handleBodySection(const std::string &fullPath, const std::string &boundary, std::string &packetBody)
+{
+	std::fstream file;
+	std::map<std::string, std::string>	list;
+
+	list = parseHead(extractHead(boundary, packetBody));
+	list["bodyData"] = extractBody(boundary, packetBody);
+	
+	if (list.find("filename") != list.end() && !list.at("bodyData").empty())
+	{
+		if (SaveFile(fullPath, list.at("filename"), list.at("bodyData")))
+			return (STAT_CREAT);
+		return (STAT_ERR);
+	}
+	return (STAT_OK);
+}
+
+static void	handleBody(ResponseData &Packet)
+{
+	int			sectionCode;
+	int			statusCode;
+	std::string	fullPath;
+	std::string	boundary;
+	std::string	bodyData;
+
+	sectionCode = 0;
+	statusCode = 200;
+	fullPath = Packet.getRequestPacket()->getFullPath();
+	boundary = Packet.getRequestPacket()->getMetaData("boundary");
+	bodyData = Packet.getRequestPacket()->getBody();
+
+	while (!bodyData.empty())
+	{
+		sectionCode = handleBodySection(fullPath, boundary, bodyData);
+		if (sectionCode == STAT_CREAT && statusCode < 201)
+		{
+			statusCode = 201;
+			Packet.setBody("<!DOCTYPE html><html lang=\"en\"><head><title>webServer v1.0</title>"
+							"</head><body><center><h1 style=\"font-family: sans-serif;\">File(s) "
+							"uploaded successfully</h1><a href=\"/\">Go to homepage</a><hr><h3 "
+							"style=\"font-family: monospace;\">webServer v1.0</h3></center></body></html>");
+		}
+		if (sectionCode == STAT_ERR)
+			statusCode = 500;
+	}
+	Packet.setStatusCode(statusCode);
+}
+
 
 bool	handlePost(ResponseData &Packet)
 {
-	std::string	requestPath;
 	std::string	fullPath;
 	Locations	*route;
 
-	requestPath = Packet.getRequestPacket()->getPath();
 	fullPath = Packet.getRequestPacket()->getFullPath();
 	route = Packet.getRequestPacket()->getRoute();
 	
-	// if (!route->useMethod("POST"))
-	// {
-	// 	Packet.setStatusCode(405);
-	// 	return (true);
-	// }
-	// if (!doesExist(fullPath))
-	// {
-	// 	Packet.setStatusCode(404);
-	// 	return (true);
-	// }
-	// if (isFolder(fullPath))
-	// {
-	// 	if (getIndexFile(fullPath, requestPath, Packet.getRequestPacket()->getRoute()).empty())
-	// 		Packet.setStatusCode(403);
-	// 	else
-	// 	{
-	// 		//if index is cgi run cgi
-	// 		//else send 403 
-	// 	}
-	// }
-	// //if index is cgi run cgi
-	// //else send 403 
+	if (!route->useMethod("POST"))
+	{
+		Packet.setStatusCode(405);
+		return (true);
+	}
+	if (!doesExist(fullPath))
+	{
+		Packet.setStatusCode(404);
+		return (true);
+	}
+	if (isFolder(fullPath))
+	{
+		if (!getIndexFile(fullPath, Packet.getRequestPacket()->getRoute()).empty())
+		{
+			//if cgi run cgi
+			//set status code
+			//return
+		}
+		handleBody(Packet);
+		return (true);
+	}
+	if (!isFolder(fullPath))
+	{
+		//if cgi run cgi
+			//set status code
+			//return
+	}
+	Packet.setStatusCode(403);
 	return (true);
 }

@@ -6,11 +6,11 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/09 09:13:00 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/11 02:02:14 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/27 05:04:58 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../network.hpp"
+#include "./generateResponse.hpp"
 
 static bool	handleAutoIndex(ResponseData &Packet)
 {
@@ -40,11 +40,10 @@ bool	handleGet(ResponseData &Packet)
 	std::string	FilePath;
 	std::string	Temp;
 
-	RequestPath = Packet.getRequestPacket()->getPath();
 	FilePath = Packet.getRequestPacket()->getFullPath();
 	if (isFolder(FilePath))
 	{
-		Temp = getIndexFile(FilePath, RequestPath, Packet.getRequestPacket()->getRoute());
+		Temp = getIndexFile(FilePath, Packet.getRequestPacket()->getRoute());
 		if (Temp.empty())
 			return (handleAutoIndex(Packet));
 		FilePath = Temp;

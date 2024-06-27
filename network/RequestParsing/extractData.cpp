@@ -6,11 +6,21 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 12:38:55 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/10 22:59:54 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/23 07:35:51 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "RequestParsing.hpp"
+
+static std::string	correctString(const std::string &str)
+{
+	int length = 0;
+	while (str[length])
+		length++;
+	if (str.length() != length)
+		return (str.substr(0, length));
+	return (str);
+}
 
 static bool	extractRequest(const std::string &line, RequestData &Data)
 {
@@ -21,9 +31,9 @@ static bool	extractRequest(const std::string &line, RequestData &Data)
 	if (splittedLine.size() != 3)
 		return (false);
 
-	Data.setMethod(splittedLine[0]);
-	Data.setPath(splittedLine[1]);
-	Data.setProtocol(splittedLine[2]);
+	Data.setMethod(correctString(splittedLine[0]));
+	Data.setPath(correctString(splittedLine[1]));
+	Data.setProtocol(correctString(splittedLine[2]));
 
 	return (true);
 }
@@ -31,22 +41,25 @@ static bool	extractRequest(const std::string &line, RequestData &Data)
 static bool	extractMetaData(const std::string &line, RequestData &Data)
 {
 	std::vector<std::string> splittedLine;
+	std::vector<std::string> temp;
 
 	splittedLine = split(line, ": ");
 
 	if (splittedLine.size() != 2)
-		return (false);
-	
-	if (splittedLine[0] == "Content-Type")
 	{
-		std::vector<std::string> temp = split(splittedLine[1], "; ");
-		Data.addMetaData(splittedLine[0], temp[0]);
-		temp = split(temp[1], "=");
-		Data.addMetaData(temp[0], temp[1].substr(0, temp[1].length() - 1));
+		splittedLine = split(line, "=");
+		if (splittedLine.size() != 2)
+			return (false);
+	}
+	
+	temp = split(splittedLine[1], "; ");
+	if (temp.size() != 1)
+	{
+		Data.addMetaData(correctString(splittedLine[0]), correctString(temp[0]));
+		extractMetaData(temp[1], Data);
 	}
 	else
-		Data.addMetaData(splittedLine[0], splittedLine[1]);
-
+		Data.addMetaData(correctString(splittedLine[0]), correctString(splittedLine[1]));
 	return (true);
 }
 

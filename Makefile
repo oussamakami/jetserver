@@ -17,7 +17,8 @@ PARSING		=	parsing/parsingChecks.cpp parsing/parseSystem.cpp\
 REQUESTS	=	network/RequestParsing/extractData.cpp network/RequestParsing/getServer.cpp\
 				network/RequestParsing/RequestParsing.cpp
 
-RESPONSE	=	network/generateResponse/generateResponse.cpp network/generateResponse/handleGet.cpp
+RESPONSE	=	network/generateResponse/generateResponse.cpp network/generateResponse/handleGet.cpp\
+				network/generateResponse/handlePost.cpp
 
 NETWORK		=	network/setSockets.cpp network/processReq.cpp\
 				network/startServers.cpp $(REQUESTS) $(RESPONSE)
@@ -26,7 +27,7 @@ FILES		=	$(CLASSES) $(TOOLS) $(PARSING) $(NETWORK) main.cpp
 OBJ			=	$(FILES:.cpp=.o)
 NAME		=	webserver
 
-all:		$(NAME) clean
+all:		$(NAME)
 
 $(NAME):	$(OBJ)
 	$(CXX) $(CXXFLAGS) $(OBJ) -o $(NAME)

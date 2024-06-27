@@ -6,11 +6,11 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 18:02:48 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/11 02:12:28 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/27 05:56:08 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../network.hpp"
+#include "./generateResponse.hpp"
 
 int	checkRequestFormat(RequestData &data)
 {
@@ -38,7 +38,7 @@ int	checkRequestFormat(RequestData &data)
 		return (400);
 	if (!route->useMethod(data.getMethod()))
 		return (405);
-	if (data.getProtocol().substr(0, 8) != "HTTP/1.1")
+	if (data.getProtocol() != "HTTP/1.1")
 		return (505);
 	return (200);
 }
@@ -54,7 +54,7 @@ static bool	isRedirection(ResponseData	&Packet)
 	if (Route->isRedirection())
 		return (Packet.redirect(Route->getRedirection(), Route->isRedirectionHard()));
 
-	if (isFolder(Packet.getRequestPacket()->getFullPath()))
+	if (isFolder(Packet.getRequestPacket()->getFullPath()) && Packet.getRequestPacket()->getMethod() != "POST")
 	{
 		if (requestPath[requestPath.length() - 1] != '/')
 		{
@@ -88,7 +88,7 @@ void	generateResponse(int clientFD, ResponseData &packet)
 	if (packet.getRequestPacket()->getMethod() == "GET")
 		handleGet(packet);
 	else if (packet.getRequestPacket()->getMethod() == "POST")
-		packet.setStatusCode(501);
+		handlePost(packet);
 	else if (packet.getRequestPacket()->getMethod() == "DELETE")
 		packet.setStatusCode(501);
 	else
