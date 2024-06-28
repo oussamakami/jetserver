@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:05:22 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/28 07:50:57 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/28 12:26:00 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -198,20 +198,6 @@ void	CommandLine::execute(void)
 		this->status = STAT_ERR;
 		return ;
 	}
-
-	if (!this->input.empty())
-	{
-		if (write(inputPipe[1], this->input.c_str(), this->input.length()) == -1)
-		{
-			close(inputPipe[0]);
-			close(inputPipe[1]);
-			close(outputPipe[0]);
-			close(outputPipe[1]);
-			this->status = STAT_ERR;
-			return ;
-		}
-		close(inputPipe[1]);
-	}
 	pid = fork();
 	if (pid == -1)
 	{
@@ -226,8 +212,11 @@ void	CommandLine::execute(void)
 		runCommandLine(this->cmdArgs, this->cmdEnvs, inputPipe, outputPipe);
 	else
 	{
-		waitpid(pid, &status, 0);
 		close(inputPipe[0]);
+		if (!this->input.empty())
+			write(inputPipe[1], this->input.c_str(), this->input.length());
+		close(inputPipe[1]);
+		waitpid(pid, &status, 0);
 		close(outputPipe[1]);
 		this->output = readPipe(outputPipe[0]);
 		close(outputPipe[0]);

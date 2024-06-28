@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 00:57:35 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/28 04:56:29 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/28 13:44:36 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,12 @@ static	bool	SaveFile(const std::string &fullPath, const std::string fileName, co
 	std::string					customName = fileName;
 	std::fstream				fileData;
 	std::vector<std::string>	dirContent = getDirContent(fullPath);
+
+	for (int i = 0; i < customName.length(); i++)
+	{
+		if (customName[i] == ' ')
+			customName[i] = '_';
+	}
 	
 	for (int i = 0; i < dirContent.size(); i++)
 	{
@@ -199,27 +205,23 @@ bool	handlePost(ResponseData &Packet)
 		{
 			if (isCGI(indexFile))
 			{
-				//run cgi
-				//set status code
-				return (true);
-			}
-			else
-			{
-				if (handleBody(Packet) != 500)
-					Packet.readFile(indexFile);
+				CGI_Post(Packet, indexFile);
 				return (true);
 			}
 		}
+		if (handleBody(Packet) != 500)
+			Packet.readFile(indexFile);
+		return (true);
 	}
 	if (!isFolder(fullPath))
 	{
 		if (isCGI(fullPath))
 		{
-			//run cgi
-			//set status code
+			CGI_Post(Packet, fullPath);
 			return (true);
 		}
 	}
+	std::cout << "here\n";
 	Packet.setStatusCode(403);
 	return (true);
 }

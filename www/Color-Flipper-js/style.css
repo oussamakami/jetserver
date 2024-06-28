@@ -1,0 +1,80 @@
+@import url("https://fonts.googleapis.com/css2?family=Didact+Gothic&family=Poppins&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Didact Gothic", sans-serif;
+}
+:root {
+  --primColor: #222;
+  --secColor: #aeb3ff;
+  font-size: 2vw;
+}
+body {
+  height: 100vh;
+  display: grid;
+  place-content: center;
+}
+#CenterBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+h1 {
+  background-color: var(--primColor);
+  color: #fff;
+  padding: 8px 15px;
+  border-radius: 8px;
+  font-size: 1.4rem;
+}
+h1 #HexVal {
+  color: var(--secColor);
+  cursor: pointer;
+  font-family: "Poppins", sans-serif;
+}
+#CenterBox button {
+  margin-top: 30px;
+  padding: 5px 30px;
+  font-size: 1rem;
+  font-weight: 900;
+  background: var(--primColor);
+  border: 3px solid var(--primColor);
+  color: #fff;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: 0.2s all ease;
+}
+#CenterBox > button:hover {
+  border: 3px solid var(--secColor);
+  color: var(--secColor);
+}
+#Notification {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -8.5vh;
+  background: var(--primColor);
+  width: max-content;
+  margin: auto;
+  color: #fff;
+  padding: 5px 20px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  transition: 1s all ease;
+}
+#ValueHolder {
+  position: absolute;
+  left: -100vw;
+}
+@media all and (max-width: 900px){
+  #CenterBox h1 {
+    font-size: 2.5rem;
+  }
+  #CenterBox button {
+    font-size: 2rem;
+  }
+  #Notification {
+    font-size: 1.8rem;
+  }
+}
