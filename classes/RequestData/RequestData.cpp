@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/28 11:11:27 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/09 15:01:53 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/28 05:33:16 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,6 @@ RequestData::RequestData(void)
 	this->_Path = "";
 	this->_Protocol = "";
 	this->_Body = "";
-	this->_QueryString = "";
 	this->_Server = NULL;
 }
 
@@ -88,7 +87,7 @@ void	RequestData::setPath(const std::string &path)
 
 	filteredString = path;
 	
-	this->_QueryString = extractQueryString(filteredString);
+	this->addMetaData("QueryString", extractQueryString(filteredString));
 	this->_Path = filteredString;
 }
 

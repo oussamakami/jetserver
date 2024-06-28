@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 08:00:10 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/08 21:56:53 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/28 05:32:12 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ class RequestData
 		std::string 						_FullPath;
 		std::string							_Protocol;
 		std::string							_Body;
-		std::string							_QueryString;
 		std::map<std::string, std::string>	_MetaData;
 		Servers		*_Server;
 		Locations	*_Route;

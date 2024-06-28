@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/09 09:13:00 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/27 05:04:58 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/28 06:01:12 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,11 @@ bool	handleGet(ResponseData &Packet)
 		Packet.setStatusCode(404);
 		return (true);
 	}
-	//if cgi run cgi
-	//else 
+	if (isCGI(FilePath))
+	{
+		CGI_Get(Packet, FilePath);
+		return (true);
+	}
 	Packet.setStatusCode(200);
 	Packet.readFile(FilePath);
 	return (true);

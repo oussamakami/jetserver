@@ -3,12 +3,12 @@ CXXFLAGS	=	-std=c++98 -g
 
 CLASSES		=	classes/SysData/SysData.cpp classes/Locations/Locations.cpp\
 				classes/Servers/Servers.cpp classes/RequestData/RequestData.cpp\
-				classes/ResponseData/ResponseData.cpp
+				classes/ResponseData/ResponseData.cpp classes/CommandLine/CommandLine.cpp
 
 TOOLS		=	tools/notify.cpp tools/terminate.cpp tools/trim.cpp\
 				tools/split.cpp tools/terminateOnSignal.cpp\
 				tools/pathCombs.cpp tools/strIntConv.cpp\
-				tools/executeCMD.cpp tools/autoIndexTools.cpp
+				tools/autoIndexTools.cpp tools/isCGI.cpp
 
 PARSING		=	parsing/parsingChecks.cpp parsing/parseSystem.cpp\
 				parsing/parseServers.cpp parsing/parseRoutes.cpp\
@@ -18,7 +18,7 @@ REQUESTS	=	network/RequestParsing/extractData.cpp network/RequestParsing/getServ
 				network/RequestParsing/RequestParsing.cpp
 
 RESPONSE	=	network/generateResponse/generateResponse.cpp network/generateResponse/handleGet.cpp\
-				network/generateResponse/handlePost.cpp
+				network/generateResponse/CGI_Get.cpp network/generateResponse/handlePost.cpp
 
 NETWORK		=	network/setSockets.cpp network/processReq.cpp\
 				network/startServers.cpp $(REQUESTS) $(RESPONSE)

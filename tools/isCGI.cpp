@@ -1,26 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   generateResponse.hpp                               :+:      :+:    :+:   */
+/*   isCGI.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/23 05:20:32 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/28 06:00:11 by okamili          ###   ########.fr       */
+/*   Created: 2024/06/27 07:14:44 by okamili           #+#    #+#             */
+/*   Updated: 2024/06/27 07:26:35 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GENERATERESPONSE_HPP
-# define GENERATERESPONSE_HPP
+#include "tools.hpp"
 
-# include "../RequestParsing/RequestParsing.hpp"
+bool	isCGI(const std::string &fullPath)
+{
+	std::vector<std::string> temp;
 
-
-void	generateResponse(int clientFD, ResponseData &data);
-bool	handleGet(ResponseData &Packet);
-bool	handlePost(ResponseData &Packet);
-
-void	CGI_Get(ResponseData &Packet, const std::string &filePath);
-
-
-#endif
+	if (isFolder(fullPath) || !global::system->use_CGI())
+		return (false);
+	temp = split(fullPath, ".");
+	if (temp.size() < 2)
+		return (false);
+	return (temp.back() == global::system->get_CGI_Ext());
+}

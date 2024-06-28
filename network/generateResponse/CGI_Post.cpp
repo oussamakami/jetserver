@@ -1,26 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   generateResponse.hpp                               :+:      :+:    :+:   */
+/*   CGI_Post.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/23 05:20:32 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/28 06:00:11 by okamili          ###   ########.fr       */
+/*   Created: 2024/06/28 07:59:48 by okamili           #+#    #+#             */
+/*   Updated: 2024/06/28 08:01:49 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GENERATERESPONSE_HPP
-# define GENERATERESPONSE_HPP
+#include "generateResponse.hpp"
 
-# include "../RequestParsing/RequestParsing.hpp"
+void	CGI_Post(ResponseData &Packet, const std::string &filePath)
+{
+	std::string	command;
+	CommandLine	shell;
 
+	command = global::system->get_CGI();
+	command += " ";
+	command += filePath;
 
-void	generateResponse(int clientFD, ResponseData &data);
-bool	handleGet(ResponseData &Packet);
-bool	handlePost(ResponseData &Packet);
-
-void	CGI_Get(ResponseData &Packet, const std::string &filePath);
-
-
-#endif
+	
+}

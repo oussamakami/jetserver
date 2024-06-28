@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:46:47 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/27 05:54:22 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/27 07:07:42 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,6 +197,7 @@ bool	ResponseData::readFile(const std::string &path)
 		fileStream.seekg(0, std::ios_base::beg);
 		setMetaData("Content-Length", intToString(bytesRead));
 		setMetaData("Content-Type", _GetFileType(path));
+		setBody("");
 		bytesRead = 0;
 	}
 	fileStream.read(buffer, 2048);

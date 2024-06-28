@@ -6,15 +6,13 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 00:57:35 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/27 06:16:13 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/28 04:56:29 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./generateResponse.hpp"
 
-#define STAT_OK		0
 #define STAT_CREAT	1
-#define STAT_ERR	2
 
 static std::string	correctString(const std::string &str)
 {
@@ -136,16 +134,17 @@ static int	handleBodySection(const std::string &fullPath, const std::string &bou
 			return (STAT_CREAT);
 		return (STAT_ERR);
 	}
-	return (STAT_OK);
+	return (STAT_SUCC);
 }
 
-static void	handleBody(ResponseData &Packet)
+static int	handleBody(ResponseData &Packet)
 {
 	int			sectionCode;
 	int			statusCode;
 	std::string	fullPath;
 	std::string	boundary;
 	std::string	bodyData;
+	std::string	packetResponse;
 
 	sectionCode = 0;
 	statusCode = 200;
@@ -157,22 +156,26 @@ static void	handleBody(ResponseData &Packet)
 	{
 		sectionCode = handleBodySection(fullPath, boundary, bodyData);
 		if (sectionCode == STAT_CREAT && statusCode < 201)
-		{
 			statusCode = 201;
-			Packet.setBody("<!DOCTYPE html><html lang=\"en\"><head><title>webServer v1.0</title>"
-							"</head><body><center><h1 style=\"font-family: sans-serif;\">File(s) "
-							"uploaded successfully</h1><a href=\"/\">Go to homepage</a><hr><h3 "
-							"style=\"font-family: monospace;\">webServer v1.0</h3></center></body></html>");
-		}
 		if (sectionCode == STAT_ERR)
 			statusCode = 500;
 	}
+
+	packetResponse = "<!DOCTYPE html><html lang=\"en\"><head><title>webServer v1.0</title>";
+	packetResponse += "</head><body><center><h1 style=\"font-family: sans-serif;\">File(s) ";
+	packetResponse += "uploaded successfully</h1><a href=\"/\">Go to homepage</a><hr><h3 ";
+	packetResponse += "style=\"font-family: monospace;\">webServer v1.0</h3></center></body></html>";
+	
+	if (statusCode == 201)
+		Packet.setBody(packetResponse);
 	Packet.setStatusCode(statusCode);
+	return (statusCode);
 }
 
 
 bool	handlePost(ResponseData &Packet)
 {
+	std::string	indexFile;
 	std::string	fullPath;
 	Locations	*route;
 
@@ -191,20 +194,31 @@ bool	handlePost(ResponseData &Packet)
 	}
 	if (isFolder(fullPath))
 	{
-		if (!getIndexFile(fullPath, Packet.getRequestPacket()->getRoute()).empty())
+		indexFile = getIndexFile(fullPath, Packet.getRequestPacket()->getRoute());
+		if (!indexFile.empty())
 		{
-			//if cgi run cgi
-			//set status code
-			//return
+			if (isCGI(indexFile))
+			{
+				//run cgi
+				//set status code
+				return (true);
+			}
+			else
+			{
+				if (handleBody(Packet) != 500)
+					Packet.readFile(indexFile);
+				return (true);
+			}
 		}
-		handleBody(Packet);
-		return (true);
 	}
 	if (!isFolder(fullPath))
 	{
-		//if cgi run cgi
+		if (isCGI(fullPath))
+		{
+			//run cgi
 			//set status code
-			//return
+			return (true);
+		}
 	}
 	Packet.setStatusCode(403);
 	return (true);

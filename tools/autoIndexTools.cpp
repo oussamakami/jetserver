@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/09 09:07:55 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/27 04:41:59 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/28 04:48:15 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,16 @@
 
 std::vector<std::string>	getDirContent(const std::string &DirPath)
 {
-	std::string	cmd;
-	std::string	rawData;
-	std::vector<std::string> result;
+	CommandLine		shell;
+	std::string		command;
 
-	cmd = "/bin/ls|-1pX|";
-	cmd += DirPath;
+	command = "/bin/ls -1pX ";
+	command += DirPath;
 
-	executeCMD(cmd, rawData);
+	shell.setCommand(command);
+	shell.execute();
 
-	rawData = trim(rawData, "\n");
-	result = split(rawData, "\n");
-
-	return (result);
+	return (split(trim(shell.getOutput(), "\n"), "\n"));
 }
 
 std::string	generateDirPage(const std::string &DirPath, const std::string &RequestPath)
@@ -56,26 +53,30 @@ std::string	generateDirPage(const std::string &DirPath, const std::string &Reque
 
 bool	doesExist(const std::string &path)
 {
-	std::string	cmd;
-	std::string	rawData;
-	
-	cmd = "/bin/ls|";
-	cmd += path;
+	CommandLine		shell;
+	std::string		command;
 
-	return (executeCMD(cmd, rawData) == 0);
+	command = "/bin/ls ";
+	command += path;
+	
+	shell.setCommand(command);
+	shell.execute();
+
+	return (shell.getStatusCode() == STAT_SUCC);
 }
 
 bool	isFolder(const std::string &path)
 {
-	std::string	cmd;
-	std::string	rawData;
+	CommandLine		shell;
+	std::string		command;
+
+	command = "/bin/file ";
+	command += path;
 	
-	cmd = "/bin/file|";
-	cmd += path;
+	shell.setCommand(command);
+	shell.execute();
 
-	executeCMD(cmd, rawData);
-
-	return (trim(split(rawData, " ").back(), "\n") == "directory");
+	return (trim(split(shell.getOutput(), " ").back(), "\n") == "directory");
 }
 
 std::string	getIndexFile(const std::string &DirPath, const Locations *route)
@@ -84,6 +85,8 @@ std::string	getIndexFile(const std::string &DirPath, const Locations *route)
 	std::string					result;
 
 	result = DirPath;
+	if (result[result.length()-1] != '/')
+		result += '/';
 	if (!isFolder(DirPath))
 		return (result);
 
