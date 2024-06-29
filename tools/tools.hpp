@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/25 10:54:20 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/28 04:38:56 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/28 23:35:10 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,9 @@
 # include <vector>
 # include <algorithm>
 # include "../classes/classes.hpp"
+
+class ResponseData;
+
 
 /**
  * @brief Print a notification message to a stream.
@@ -72,13 +75,13 @@ void	terminateOnSignal(void);
 std::vector<std::string> pathCombs(const std::string &path);
 std::string	intToString(int num);
 int	StringToInt(const std::string &num);
-// int	executeCMD(const std::string &command, std::string &result);
 std::vector<std::string>	getDirContent(const std::string &DirPath);
 std::string	generateDirPage(const std::string &DirPath, const std::string &RequestPath);
 bool	doesExist(const std::string &path);
 bool	isFolder(const std::string &path);
 std::string	getIndexFile(const std::string &DirPath, const Locations *route);
 bool	isCGI(const std::string &fullPath);
+void	captureLog(ResponseData &Packet);
 
 
 #endif

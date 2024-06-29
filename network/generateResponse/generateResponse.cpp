@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 18:02:48 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/27 05:56:08 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/28 23:57:58 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,10 @@ void	generateResponse(int clientFD, ResponseData &packet)
 		return ;
 	}
 	if (isRedirection(packet))
+	{
 		packet.sendResponse(clientFD);
+		return ;
+	}
 
 	if (packet.getRequestPacket()->getMethod() == "GET")
 		handleGet(packet);

@@ -8,7 +8,8 @@ CLASSES		=	classes/SysData/SysData.cpp classes/Locations/Locations.cpp\
 TOOLS		=	tools/notify.cpp tools/terminate.cpp tools/trim.cpp\
 				tools/split.cpp tools/terminateOnSignal.cpp\
 				tools/pathCombs.cpp tools/strIntConv.cpp\
-				tools/autoIndexTools.cpp tools/isCGI.cpp
+				tools/autoIndexTools.cpp tools/isCGI.cpp\
+				tools/captureLog.cpp
 
 PARSING		=	parsing/parsingChecks.cpp parsing/parseSystem.cpp\
 				parsing/parseServers.cpp parsing/parseRoutes.cpp\

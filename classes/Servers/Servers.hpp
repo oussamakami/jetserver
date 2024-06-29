@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 09:20:18 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/11 02:21:09 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/29 02:18:36 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,6 @@ class Servers
 		const std::set<std::string>	&getDomains(void) const;
 		const std::string			getError(const size_t errorNum, const std::string &msg);
 		Locations					*getRoute(const std::string &ReqPath);
-		//still need functions for getting the routes...
-		//add static to side functions in the whole code
 };
 
 #endif

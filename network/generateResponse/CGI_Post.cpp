@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 07:59:48 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/28 12:26:41 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/29 02:50:02 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,35 +14,31 @@
 
 static std::string	extractContentType(ResponseData &Packet, const std::string &output)
 {
-	int							i;
 	std::string					line;
 	std::string					result;
 	std::vector<std::string>	metaData;
 	std::stringstream			ss(output);
+	bool						hasHeader = false;
 
 	Packet.setMetaData("Content-type", "text/html");
-	getline(ss, line);
-	metaData = split(line, "; ");
 
-	for (i = 0; i < metaData.size(); i++)
+	for (int i = 0; getline(ss, line); i++)
 	{
-		if (metaData.at(i).find("Content-type") != std::string::npos)
-			break;
-	}
-
-	if (i < metaData.size())
-	{
-		metaData = split(metaData.at(i), ": ");
-		if (metaData.size() == 2)
-			Packet.setMetaData("Content-type", metaData.at(1));
-	}
-
-	while (getline(ss, line))
-	{
+		if (i > 3 && !hasHeader)
+			return (output);
+		if (i < 4 && !hasHeader)
+		{
+			if (line.length() == 1)
+				hasHeader = true;
+			continue;
+		}
 		result += line;
 	}
+
 	return (result);
 }
+
+
 
 void	CGI_Post(ResponseData &Packet, const std::string &filePath)
 {
@@ -56,15 +52,18 @@ void	CGI_Post(ResponseData &Packet, const std::string &filePath)
 
 	shell.setCommand(command);
 
+	shell.addEnv("SERVER_PROTOCOL", Packet.getRequestPacket()->getProtocol());
 	shell.addEnv("GATEWAY_INTERFACE", "CGI/1.1");
 	shell.addEnv("REQUEST_METHOD", "POST");
 	shell.addEnv("SCRIPT_FILENAME", filePath);
+	shell.addEnv("REMOTE_ADDR", Packet.getRequestPacket()->getClientIP());
 	shell.addEnv("SERVER_NAME", Packet.getRequestPacket()->getServer()->getHost());
 	shell.addEnv("SERVER_PORT", intToString(Packet.getRequestPacket()->getServer()->getPort()));
 	shell.addEnv("SERVER_SOFTWARE", "WebServer/1.0");
 	shell.addEnv("CONTENT_TYPE", Packet.getRequestPacket()->getMetaData("Content-Type"));
 	shell.addEnv("CONTENT_LENGTH", Packet.getRequestPacket()->getMetaData("Content-Length"));
 	shell.addEnv("REDIRECT_STATUS", "200");
+	shell.addEnv("PHPRC", "/tmp/web.ini");
 	
 	if (!Packet.getRequestPacket()->getMetaData("User-Agent").empty())
 		shell.addEnv("HTTP_USER_AGENT", Packet.getRequestPacket()->getMetaData("User-Agent"));

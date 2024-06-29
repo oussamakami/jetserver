@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/28 16:10:32 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/11 00:41:20 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/28 23:35:35 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,11 @@ static void	manageClients(pollfd *clientsFDs)
 		}
 		else if (clientsFDs[index].revents & POLLOUT)
 		{
+			if (!RequestPackets[clientsFDs[index].fd]->getBody().empty())
+			{
+				if (RequestPackets[clientsFDs[index].fd]->getBody().length() < RequestPackets[clientsFDs[index].fd]->getSize())
+					continue;
+			}
 			if (ResponsePackets.find(clientsFDs[index].fd) == ResponsePackets.end())
 			{
 				ResponsePackets[clientsFDs[index].fd] = new ResponseData();

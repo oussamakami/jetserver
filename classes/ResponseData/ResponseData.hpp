@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:11:32 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/10 15:32:52 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/28 23:36:59 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ class ResponseData
 	public:
 		ResponseData(void);
 		~ResponseData(void);
+		int			getStatusCode(void);
 		bool		setStatusCode(int statusCode);
 		bool		setMetaData(const std::string &key, const std::string &value);
 		bool		setBody(const std::string &data);

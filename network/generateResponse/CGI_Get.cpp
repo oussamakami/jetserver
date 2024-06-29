@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 04:56:55 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/28 10:32:49 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/29 02:50:15 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,10 +56,12 @@ void	CGI_Get(ResponseData &Packet, const std::string &filePath)
 
 	shell.setCommand(command);
 
+	shell.addEnv("SERVER_PROTOCOL", Packet.getRequestPacket()->getProtocol());
 	shell.addEnv("GATEWAY_INTERFACE", "CGI/1.1");
 	shell.addEnv("REQUEST_METHOD", "GET");
 	shell.addEnv("SCRIPT_FILENAME", filePath);
 	shell.addEnv("QUERY_STRING", Packet.getRequestPacket()->getMetaData("QueryString"));
+	shell.addEnv("REMOTE_ADDR", Packet.getRequestPacket()->getClientIP());
 	shell.addEnv("SERVER_NAME", Packet.getRequestPacket()->getServer()->getHost());
 	shell.addEnv("SERVER_PORT", intToString(Packet.getRequestPacket()->getServer()->getPort()));
 	shell.addEnv("SERVER_SOFTWARE", "WebServer/1.0");

@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 04:16:14 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/09 12:42:35 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/29 00:49:41 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,22 @@
 
 SysData::SysData(void)
 {
-	this->_maxBodySize = 16384;
+	std::fstream webini;
+
+	this->_maxBodySize = 52428800;
 	this->_CGI = "";
 	this->_CGI_Ext = "";
 	this->_UseCGI = false;
 	this->_DevMode = true;
 	this->_LogPath = "";
+
+	webini.open("/tmp/web.ini", std::ios::out);
+	if (webini.is_open())
+	{
+		webini << "post_max_size = 52428800\n";
+		webini << "upload_max_filesize = 52428800\n";
+	}
+	webini.close();
 }
 
 SysData::~SysData(void)
@@ -38,11 +48,23 @@ SysData::~SysData(void)
 		close(it->fd);
 		it++;
 	}
+	std::remove("/tmp/web.ini");
 }
 
 void	SysData::setMaxBodySize(const size_t newSize)
 {
+	std::fstream webini;
+
 	this->_maxBodySize = newSize;
+
+	webini.open("/tmp/web.ini", std::ios::out);
+	if (webini.is_open())
+	{
+		webini << "post_max_size = " << intToString(newSize);
+		webini << "\nupload_max_filesize = " << intToString(newSize);
+		webini << "\n";
+	}
+	webini.close();
 }
 
 void	SysData::set_CGI(const std::string &CGI_Program)

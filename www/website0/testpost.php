@@ -15,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Move uploaded file to specified directory
         if (move_uploaded_file($_FILES['profile_picture']['tmp_name'], $uploadFile)) {
             echo "Profile Picture uploaded successfully.<br>";
-            echo '<img src="' . htmlspecialchars($uploadFile) . '" alt="Profile Picture"><br>';
+            echo '<img src="' . htmlspecialchars($uploadFile) . '" alt="Profile Picture" style="width: 20vw;"><br>';
         } else {
             echo "Error uploading profile picture.";
         }

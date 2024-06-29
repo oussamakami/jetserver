@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:46:47 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/27 07:07:42 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/29 01:25:44 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,6 +149,14 @@ bool	ResponseData::redirect(const std::string &Path, bool isHard)
 	return (true);
 }
 
+int		ResponseData::getStatusCode(void)
+{
+	std::string tmp;
+
+	tmp = split(_StatusCode, " ").at(0);
+	return (StringToInt(tmp));
+}
+
 bool	ResponseData::setStatusCode(int statusCode)
 {
 	std::map<int, std::string>::iterator	holder;
@@ -184,7 +192,7 @@ bool	ResponseData::readFile(const std::string &path)
 {
 	std::fstream		fileStream;
 	int					bytesRead = 0;
-	char				buffer[2048];
+	char				buffer[8192];
 
 	if (path.empty())
 			return (false);
@@ -200,12 +208,12 @@ bool	ResponseData::readFile(const std::string &path)
 		setBody("");
 		bytesRead = 0;
 	}
-	fileStream.read(buffer, 2048);
+	fileStream.read(buffer, 8192);
 	bytesRead = fileStream.gcount();
-	while (bytesRead == 2048)
+	while (bytesRead == 8192)
 	{
 		_Body.append(buffer, bytesRead);
-		fileStream.read(buffer, 2048);
+		fileStream.read(buffer, 8192);
 		bytesRead = fileStream.gcount();
 	}
 	_Body.append(buffer, bytesRead);
@@ -215,7 +223,7 @@ bool	ResponseData::readFile(const std::string &path)
 
 bool	ResponseData::sendResponse(int fd)
 {
-	size_t		bufferSize = 1024;
+	size_t		bufferSize = 1048576;
 	std::string	response;
 
 	if (!isBusy())
@@ -223,6 +231,7 @@ bool	ResponseData::sendResponse(int fd)
 		_GenerateHead();
 		if (!_GeneratePacket())
 			return (false);
+		captureLog(*this);
 	}
 	response = _Packet.substr(0, bufferSize);
 	if (send(fd, response.c_str(), response.length(), 0) == -1)

@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 00:57:35 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/28 13:44:36 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/28 23:39:46 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -221,7 +221,6 @@ bool	handlePost(ResponseData &Packet)
 			return (true);
 		}
 	}
-	std::cout << "here\n";
 	Packet.setStatusCode(403);
 	return (true);
 }

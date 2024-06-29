@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 13:25:33 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/28 08:27:47 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/29 01:26:19 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 static std::string	readReq(int clientFD)
 {
 	int			bytesReceived;
-	int			maxBufferSize = 1024;
+	int			maxBufferSize = 8192;
 	char		buffer[maxBufferSize];
 	std::string	httpPacket;
 
@@ -41,6 +41,9 @@ static void	extractBody(const std::string &packet, RequestData &data)
 		return;
 	startpos = packet.find(boundary, packet.find(boundary) + 1);
 
+	if (startpos == std::string::npos)
+		return ;
+
 	data.appendBody("--");
 	data.appendBody(packet.substr(startpos));
 }
@@ -63,16 +66,3 @@ bool	requestParsing(int clientFD, RequestData &packetData)
 	extractBody(clientPacket, packetData);
 	return (true);
 }
-
-/**
- * 
- * implement parsing for upload packets
- * 
- * log only in response 
- *  
- * 2024-05-18 14:32:10 [Server] Host: example.com, IP: 192.168.1.1 -> GET /index.html [status 200]
- * 
- * 2024-05-18 14:32:10 [Server] 192.168.1.1 -> GET http://example.com/index.html [status 200]
- * 
- * May 18 14:32:10 [Server] 192.168.1.1 -> GET http://example.com/index.html [status 200]
- */
