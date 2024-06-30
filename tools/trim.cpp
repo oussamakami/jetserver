@@ -14,8 +14,8 @@
 
 std::string trim(const std::string &str, const std::string &charList)
 {
-	size_t head = str.find_first_not_of(charList);
-	size_t tail = str.find_last_not_of(charList);
+	size_t	head = str.find_first_not_of(charList);
+	size_t	tail = str.find_last_not_of(charList);
 
 	if (head != std::string::npos)
 		return (str.substr(head, ++tail - head));

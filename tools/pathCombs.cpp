@@ -6,13 +6,13 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/12 10:54:18 by okamili           #+#    #+#             */
-/*   Updated: 2024/05/12 10:58:58 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/30 12:12:24 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "tools.hpp"
 
-std::vector<std::string> pathCombs(const std::string &path)
+std::vector<std::string>	pathCombs(const std::string &path)
 {
 	std::vector<std::string>	result;
 	std::vector<std::string>	words;
@@ -20,7 +20,7 @@ std::vector<std::string> pathCombs(const std::string &path)
 
 	words = split(path, "/");
 	result.push_back(joined);
-	for (int i = 0; i < words.size(); i++)
+	for (size_t i = 0; i < words.size(); i++)
 	{
 		if (words.at(i).empty())
 			continue;

@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 04:56:55 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/29 02:50:15 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/30 12:16:09 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static std::string	extractContentType(ResponseData &Packet, const std::string &output)
 {
-	int							i;
+	size_t						i;
 	std::string					line;
 	std::string					result;
 	std::vector<std::string>	metaData;

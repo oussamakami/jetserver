@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 15:42:25 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/28 23:47:22 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/30 12:04:40 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,7 @@ void	captureLog(ResponseData &Packet)
 	Log << ", IP: " << Packet.getRequestPacket()->getClientIP();
 	Log << " -> (" << Packet.getRequestPacket()->getMethod();
 	Log << ") " << Packet.getRequestPacket()->getPath() << " ";
-	Log << "[Status " << Packet.getStatusCode() << "]\n";
+	Log << "[Status " << Packet.getStatusCode() << "]";
 
-	global::system->getLogStream() << Log.str();
-	global::system->getLogStream().flush();
+	notify(global::system->getLogStream(), "%s", Log.str().c_str());
 }

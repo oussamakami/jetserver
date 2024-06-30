@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/25 09:17:00 by okamili           #+#    #+#             */
-/*   Updated: 2024/02/29 13:25:27 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/30 12:02:34 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,4 +41,5 @@ void	notify(std::ostream &outStream, std::string format, ...)
 	}
 	outStream << "\n";
 	va_end(args);
+	outStream.flush();
 }

@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 13:25:33 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/29 01:26:19 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/30 14:09:43 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static std::string	readReq(int clientFD)
 static void	extractBody(const std::string &packet, RequestData &data)
 {
 	std::string	boundary = data.getMetaData("boundary");
-	int			startpos = 0;
+	size_t			startpos = 0;
 
 	if (boundary.empty())
 		return;

@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/02 08:03:54 by okamili           #+#    #+#             */
-/*   Updated: 2024/03/28 16:09:07 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/30 14:03:07 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,7 @@ static int	createSocket(const std::string &Host, uint16_t Port)
 
 static void startListening(int socketFd, int queueLimit)
 {
-	if (listen(socketFd, 100) == -1)
+	if (listen(socketFd, queueLimit) == -1)
 	{
 		notify(std::cerr, "%EUnable to listen for connections on the socket.");
 		close(socketFd);

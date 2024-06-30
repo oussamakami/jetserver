@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 05:46:02 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/08 20:25:43 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/30 12:27:38 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,14 +42,12 @@ static bool	checkOption(const std::vector<std::string> &option, size_t &fileLine
 
 static bool	setBodySize(const std::string &Value, size_t &fileLine)
 {
-	std::stringstream	ss;
-	size_t				size;
+	size_t	size = StringToInt(Value);
 
 	if (!hasOneValue("BODYSIZE", Value, fileLine))
 		return (false);
-	ss << Value;
-	ss >> size;
-	if (ss.fail() || Value[0] == '-')
+
+	if (Value[0] == '-')
 	{
 		notify(std::cerr, "%EInvalid \"BODYSIZE\" value at line %d.", fileLine);
 		return (false);
@@ -60,7 +58,7 @@ static bool	setBodySize(const std::string &Value, size_t &fileLine)
 
 static bool	setDevMode(const std::string &Value, size_t &fileLine)
 {
-	std::string	temp = "";
+	std::string	temp;
 
 	if (!hasOneValue("DEVMODE", Value, fileLine))
 		return (false);

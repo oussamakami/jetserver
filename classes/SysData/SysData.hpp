@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 03:26:09 by okamili           #+#    #+#             */
-/*   Updated: 2024/03/29 15:27:07 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/30 13:20:34 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@
  * @param set_CGI Specify the CGI program.
  * @param set_CGI_Ext Specify the CGI extension to handle.
  * @param addSocket Append a socket file descriptor (fd) to the sockets list.
- * @param addClient d
+ * @param addClient Append a client file descriptor (fd) to the list of clients.
  * @param setDevMode Specify the DevMode status.
  * @param getMaxSize Retrieve the maximum packet size allowed for clients.
  * @param get_CGI Retrieve the CGI Program currently configured for handling the CGI scripts.
@@ -40,7 +40,9 @@
  * @param getLogPath Retrieve the location of the log file.
  * @param getLogStream Provides a stream for writing to the log file.
  * @param getSockets Retrieve a list containing the file descriptors (fds) of the sockets.
- * @param getClients dd
+ * @param getNetworkFDs Gets the list of network clients' file descriptors.
+ * @param getClientIP Gets the client IP address from the network file descriptor.
+ * @param deleteClient Erase a client from the active connections.
  * @param DevMode Check the status of DevMode.
  *
  */
@@ -61,6 +63,7 @@ class SysData
 		std::vector<pollfd>			networkFDs;
 		std::map<int, std::string>	clientIP;
 	public:
+
 		/**
 		 * @brief Initialize the system data with default values.
 		 */
@@ -73,92 +76,124 @@ class SysData
 		 * @param newSize New size in bytes.
 		 */
 		void	setMaxBodySize(const size_t newSize);
+
 		/**
 		 * @brief Set the log file to be utilized by the system.
 		 * 
 		 * @param newLogPath The path of the new log file.
 		 */
 		void	setLogPath(const std::string &newLogPath);
+
 		/**
-		 * @brief Specify the CGI program
+		 * @brief Specify the CGI program.
 		 * 
-		 * @param  CGI_Program program for executing the scripts.
+		 * @param  CGI_Program Program for executing the scripts.
 		 */
 		void	set_CGI(const std::string &CGI_Program);
+
 		/**
-		 * @brief Specify the CGI extention
+		 * @brief Specify the CGI extention.
 		 * 
 		 * @param CGI_Extention Extension used for CGI scripts.
 		 */
 		void	set_CGI_Ext(const std::string &CGI_Extention);
+
 		/**
 		 * @brief Append a socket file descriptor (fd) to the list of sockets.
 		 * 
-		 * @param socketFd socket file descriptor.
+		 * @param socketFd Socket file descriptor.
 		 */
 		void	addSocket(int socketFd);
+
 		/**
 		 * @brief Append a client file descriptor (fd) to the list of clients.
 		 * 
-		 * @param socketFd client file descriptor.
+		 * @param socketFd Client file descriptor.
 		 */
 		void	addClient(int clientFd, const std::string &clientIP);
+
 		/**
 		 * @brief Set the DevMode.
 		 * 
 		 * @param status DevMode new status.
 		 */
 		void	setDevMode(bool status);
+
 		/**
 		 * @brief Retrieve the maximum packet size allowed for clients.
 		 * 
 		 * @return size_t The maximum allowed size, in bytes.
 		 */
 		size_t	getMaxSize(void) const;
+
 		/**
 		 * @brief Check if the system is configured to handle CGI.
 		 * 
-		 * @return status of CGI configuration.
+		 * @return Status of CGI configuration.
 		 */
 		bool	use_CGI(void) const;
+
 		/**
 		 * @brief Retrieve the CGI Program currently configured for handling the CGI scripts.
 		 * 
 		 * @return const std::string& The CGI Program to use.
 		 */
 		const std::string	&get_CGI(void) const;
+
 		/**
 		 * @brief Retrieve the CGI extension currently configured for handling in the system.
 		 * 
 		 * @return const std::string& The CGI extension currently being handled by the system.
 		 */
 		const std::string	&get_CGI_Ext(void) const;
+
 		/**
 		 * @brief Retrieve the location of the log file.
 		 * 
 		 * @return const std::string& The path of the current log file.
 		 */
 		const std::string 	&getLogPath(void) const;
+
 		/**
 		 * @brief Provides a stream for writing to the log file.
 		 * 
-		 * @return std::fstream& A reference to the stream.
+		 * @return std::fstream& Reference to the stream.
 		 */
 		std::ostream		&getLogStream(void);
+
 		/**
-		 * @brief Get the Sockets list.
+		 * @brief Gets the list of socket file descriptors.
 		 * 
-		 * @return const std::vector<int>& A reference to the list.
+		 * @return const std::vector<int>& Reference to the list of socket file descriptors.
 		 */
 		std::set<int>		&getSockets(void);
+
+		/**
+		 * @brief Gets the list of network clients' file descriptors.
+		 * 
+		 * @return std::vector<pollfd>& Reference to the list of network clients' file descriptors.
+		 */
 		std::vector<pollfd>	&getNetworkFDs(void);
+
+		/**
+		 * @brief Gets the client IP address from the network file descriptor.
+		 * 
+		 * @param fd The network file descriptor.
+		 * @return const std::string The client IP address.
+		 */
 		const std::string	getClientIP(int fd);
+
+		/**
+		 * @brief Erase a client from the active connections.
+		 * 
+		 * @param clientfd The client network file descriptor.
+		 */
 		void	deleteClient(int clientfd);
-		void	deleteClient(std::vector<pollfd>::iterator &it);
+
 		/**
 		 * @brief Check the DevMode status.
 		 * 
-		 * @return status of The DevMode.
+		 * @return Status of The DevMode.
 		 */
 		bool	DevMode(void) const;
 };

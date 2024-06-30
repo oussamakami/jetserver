@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 04:16:14 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/29 00:49:41 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/30 12:26:01 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,8 +195,8 @@ bool	SysData::DevMode(void) const
 
 void	SysData::deleteClient(int clientfd)
 {
-	std::vector<pollfd>::iterator it;
-	std::map<int, std::string>::iterator holder;
+	std::vector<pollfd>::iterator			it;
+	std::map<int, std::string>::iterator	holder;
 
 	holder = this->clientIP.find(clientfd);
 	if (holder == this->clientIP.end())

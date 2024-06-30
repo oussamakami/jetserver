@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/09 09:07:55 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/28 04:48:15 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/30 13:54:31 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ std::vector<std::string>	getDirContent(const std::string &DirPath)
 	CommandLine		shell;
 	std::string		command;
 
-	command = "/bin/ls -1pX ";
+	command = "/bin/ls -1ap ";
 	command += DirPath;
 
 	shell.setCommand(command);
@@ -28,15 +28,15 @@ std::vector<std::string>	getDirContent(const std::string &DirPath)
 
 std::string	generateDirPage(const std::string &DirPath, const std::string &RequestPath)
 {
-	std::string	result;
-	std::string	temp;
-	std::vector<std::string> files;
+	std::string					result;
+	std::string					temp;
+	std::vector<std::string>	files;
 
 	result = "<!DOCTYPE html><html lang=\"en\"><head><title>webServer v1.0</title></head>";
 	result += "<body><center><h1 style=\"font-family: sans-serif;\">List Of Content:</h1><hr>";
 
 	files = getDirContent(DirPath);
-	for (int i = 0; i < files.size(); i++)
+	for (size_t i = 0; i < files.size(); i++)
 	{
 		temp = "<h3><a href=\"";
 		temp += RequestPath;
@@ -51,13 +51,13 @@ std::string	generateDirPage(const std::string &DirPath, const std::string &Reque
 	return (result);
 }
 
-bool	doesExist(const std::string &path)
+bool	doesExist(const std::string &fullPath)
 {
 	CommandLine		shell;
 	std::string		command;
 
 	command = "/bin/ls ";
-	command += path;
+	command += fullPath;
 	
 	shell.setCommand(command);
 	shell.execute();
@@ -65,13 +65,13 @@ bool	doesExist(const std::string &path)
 	return (shell.getStatusCode() == STAT_SUCC);
 }
 
-bool	isFolder(const std::string &path)
+bool	isFolder(const std::string &fullPath)
 {
 	CommandLine		shell;
 	std::string		command;
 
 	command = "/bin/file ";
-	command += path;
+	command += fullPath;
 	
 	shell.setCommand(command);
 	shell.execute();
@@ -92,7 +92,7 @@ std::string	getIndexFile(const std::string &DirPath, const Locations *route)
 
 	files = getDirContent(DirPath);
 
-	for (int i = 0; i < files.size(); i++)
+	for (size_t i = 0; i < files.size(); i++)
 	{
 		if (files.at(i)[files.at(i).length() - 1] == '/')
 			continue;

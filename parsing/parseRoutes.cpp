@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 11:41:51 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/08 20:24:47 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/30 12:26:39 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ static void	setIndexValues(Locations *Route, const std::string &Values)
 
 static bool	setBrowsingStatus(Locations *Route, const std::string &Status, size_t &fileLine)
 {
-	std::string	temp = "";
+	std::string	temp;
 
 	if (!hasOneValue("BROWSEDIR", Status, fileLine))
 		return (false);

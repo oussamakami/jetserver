@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 12:31:32 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/11 02:24:21 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/30 12:25:24 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ const std::string	&Servers::getHost(void) const
 	return (this->_Host);
 }
 
-const bool	Servers::hasDomain(const std::string &DomainName) const
+bool	Servers::hasDomain(const std::string &DomainName) const
 {
 	std::string	lowerCaseDomain = "";
 
@@ -148,13 +148,13 @@ const std::string	Servers::getError(const size_t errorNum, const std::string &ms
 
 Locations		*Servers::getRoute(const std::string &ReqPath)
 {
-	std::string	routePath;
+	std::string					routePath;
 	std::vector<std::string>	reqCombs;
 
 	reqCombs = pathCombs(ReqPath);
-	for (int i = 0; i < reqCombs.size(); i++)
+	for (size_t i = 0; i < reqCombs.size(); i++)
 	{
-		for (int j = 0; j < this->_Routes.size(); j++)
+		for (size_t j = 0; j < this->_Routes.size(); j++)
 		{
 			routePath = pathCombs(this->_Routes.at(j)->getPath()).front();
 			if (routePath == reqCombs.at(i))

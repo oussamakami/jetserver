@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/28 11:11:27 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/28 05:33:16 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/30 12:08:31 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,7 @@ void	RequestData::setServer(Servers *Data)
 	}
 }
 
-const size_t		RequestData::getSize(void) const
+size_t		RequestData::getSize(void) const
 {
 	return (this->_Size);
 }

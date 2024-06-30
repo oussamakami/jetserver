@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 14:55:23 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/08 20:25:18 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/30 12:27:17 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,15 +45,12 @@ static void	setDomainName(Servers *Data, const std::string &DomainName)
 
 static bool	setPortValue(Servers *Data, const std::string &Value, size_t &fileLine)
 {
-	std::stringstream	ss;
-	size_t				PortValue;
+	size_t	PortValue = StringToInt(Value);
 
 	if (!hasOneValue("PORT", Value, fileLine))
 		return (false);
 
-	ss << Value;
-	ss >> PortValue;
-	if (ss.fail() || Value[0] == '-' || PortValue > 65535)
+	if (Value[0] == '-' || PortValue > 65535)
 	{
 		notify(std::cerr, "%EInvalid \"PORT\" value at line %d.", fileLine);
 		return (false);
@@ -64,12 +61,9 @@ static bool	setPortValue(Servers *Data, const std::string &Value, size_t &fileLi
 
 static bool	extractErrorCode(const std::string &optionName, size_t &fileLine, size_t &HTTPCode)
 {
-	std::stringstream	ss;
-	size_t				ErrorCode;
+	size_t	ErrorCode = StringToInt(optionName.substr(6));
 
-	ss << optionName.substr(6);
-	ss >> ErrorCode;
-	if (ss.fail() || ErrorCode < 400 || ErrorCode > 599)
+	if (ErrorCode < 400 || ErrorCode > 599)
 	{
 		notify(std::cerr, "%EInvalid \"%s\" option at line %d.", optionName.c_str(), fileLine);
 		notify(std::cerr, "%IOptions are only valid for HTTP statuses between ERROR_4XX and ERROR_5XX.");
@@ -99,7 +93,7 @@ static bool	setErrorPage(Servers *Data, const std::vector<std::string> &option, 
 
 static bool	assignServerConf(const std::vector<std::string> &option, std::ifstream &source, size_t &fileLine)
 {
-	static Servers		*Data;
+	static Servers	*Data;
 
 	if (!Data)
 	{

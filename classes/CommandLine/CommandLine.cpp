@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:05:22 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/28 12:26:00 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/30 12:11:57 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ void	CommandLine::generateArgs(void)
 	result = new char*[table.size() + 1];
 	result[table.size()] = NULL;
 
-	for (int i = 0; i < table.size(); i++)
+	for (size_t i = 0; i < table.size(); i++)
 	{
 		result[i] = new char[table.at(i).length() + 1];	
 		std::strcpy(result[i], table.at(i).c_str());
@@ -132,7 +132,7 @@ void	CommandLine::generateEnvs(void)
 	result = new char*[envData.size() + 1];
 	result[envData.size()] = NULL;
 	
-	for (int i = 0; i < envData.size(); i++)
+	for (size_t i = 0; i < envData.size(); i++)
 	{
 		result[i] = new char[envData.at(i).length() + 1];	
 		std::strcpy(result[i], envData.at(i).c_str());

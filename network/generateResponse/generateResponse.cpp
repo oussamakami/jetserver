@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 18:02:48 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/28 23:57:58 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/30 14:16:23 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@ int	checkRequestFormat(RequestData &data)
 		return (501);
 	if (Encoding.empty() && !data.getSize() && data.getMethod() == "Post")
 		return (400);
+	if (data.getMethod() == "Post" && !data.getSize() && !data.getBody().empty())
+		return (411);
 	if (url.length() > 2048)
 		return (414);
 	if (!trim(url, allowedChars).empty())
@@ -95,22 +97,8 @@ void	generateResponse(int clientFD, ResponseData &packet)
 	else if (packet.getRequestPacket()->getMethod() == "DELETE")
 		packet.setStatusCode(501);
 	else
-		packet.setStatusCode(405);
+		packet.setStatusCode(501);
 
 
 	packet.sendResponse(clientFD);
 }
-
-
-
-/*
-4- write description and clean code
-
-5- post in response packet
-6- delete in response packet
-7- cgi get
-8- cgi post
-9- cgi delete
-10- clean code ready to push
-
-*/

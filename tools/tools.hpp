@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/25 10:54:20 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/28 23:35:10 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/30 13:44:24 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,16 +72,85 @@ void	terminate(unsigned char errorCode);
  */
 void	terminateOnSignal(void);
 
-std::vector<std::string> pathCombs(const std::string &path);
-std::string	intToString(int num);
-int	StringToInt(const std::string &num);
-std::vector<std::string>	getDirContent(const std::string &DirPath);
-std::string	generateDirPage(const std::string &DirPath, const std::string &RequestPath);
-bool	doesExist(const std::string &path);
-bool	isFolder(const std::string &path);
-std::string	getIndexFile(const std::string &DirPath, const Locations *route);
+/**
+ * @brief Checks if a specified path exists in the filesystem.
+ * 
+ * @param fullPath The full system path to check.
+ * @return true if the path exists, false otherwise.
+ */
+bool	doesExist(const std::string &fullPath);
+
+/**
+ * @brief Checks if the specified path is a folder.
+ * 
+ * @param fullPath The full system path to check.
+ * @return true if the path is a folder, false otherwise.
+ */
+bool	isFolder(const std::string &fullPath);
+
+/**
+ * @brief Checks if the specified path is a CGI script.
+ * 
+ * @param fullPath The full system path to check.
+ * @return true if the path is a CGI script, false otherwise.
+ */
 bool	isCGI(const std::string &fullPath);
+
+/**
+ * @brief Writes network communication details to the log file.
+ * 
+ * @param Packet Reference to the response HTTP packet.
+ */
 void	captureLog(ResponseData &Packet);
 
+/**
+ * @brief Converts a string to an integer.
+ * 
+ * @param num The string representing the number.
+ * @return int The integer value of the string.
+ */
+int			StringToInt(const std::string &num);
+
+/**
+ * @brief Converts an integer to a string.
+ * 
+ * @param num The integer to convert.
+ * @return std::string The string representation of the number.
+ */
+std::string	intToString(int num);
+
+/**
+ * @brief Generates a list of combinations of parent paths from the given path.
+ * 
+ * @param path The path to process.
+ * @return std::vector<std::string> A list of the given path and its parent directories.
+ */
+std::vector<std::string>	pathCombs(const std::string &path);
+
+/**
+ * @brief Retrieves the content of a directory.
+ * 
+ * @param DirPath The full system path to the directory.
+ * @return std::vector<std::string> A list containing all the files and subfolders in the directory.
+ */
+std::vector<std::string>	getDirContent(const std::string &DirPath);
+
+/**
+ * @brief Generates an HTML page containing an autoindex of a directory.
+ * 
+ * @param DirPath The full system path to the directory.
+ * @param RequestPath The HTTP request path.
+ * @return std::string The HTML code for autoindexing the directory.
+ */
+std::string		generateDirPage(const std::string &DirPath, const std::string &RequestPath);
+
+/**
+ * @brief Retrieves the index file from a directory based on route rules.
+ * 
+ * @param DirPath The full system path to the directory.
+ * @param route Pointer to the route rules for the directory path.
+ * @return std::string The index file name or an empty string if no index file is found.
+ */
+std::string		getIndexFile(const std::string &DirPath, const Locations *route);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 00:57:35 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/28 23:39:46 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/30 12:18:29 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 
 static std::string	correctString(const std::string &str)
 {
-	int length = 0;
+	size_t length = 0;
 	while (str[length])
 		length++;
 	if (str.length() != length)
@@ -26,8 +26,8 @@ static std::string	correctString(const std::string &str)
 
 static std::string	extractHead(const std::string &boundary, std::string &body)
 {
-	int			startPos;
-	int			endPos;
+	size_t		startPos;
+	size_t		endPos;
 	std::string	startBoundary;
 	std::string result;
 
@@ -51,7 +51,7 @@ static std::string	extractHead(const std::string &boundary, std::string &body)
 
 static std::string	extractBody(const std::string &boundary, std::string &body)
 {
-	int			endPos;
+	size_t		endPos;
 	std::string	endBoundary;
 	std::string	result;
 
@@ -83,7 +83,7 @@ static std::map<std::string, std::string>	parseHead(const std::string &head)
 	while (getline(headMetaData, line))
 	{
 		list = split(line, "; ");
-		for (int i = 0; i < list.size(); i++)
+		for (size_t i = 0; i < list.size(); i++)
 		{
 			temp = split(list.at(i), ": ");
 			if (temp.size() != 2)
@@ -97,19 +97,19 @@ static std::map<std::string, std::string>	parseHead(const std::string &head)
 }
 static	bool	SaveFile(const std::string &fullPath, const std::string fileName, const std::string &body)
 {
-	int							fileCount = 0;
+	size_t						fileCount = 0;
 	std::string					customPath = fullPath + "/";
 	std::string					customName = fileName;
 	std::fstream				fileData;
 	std::vector<std::string>	dirContent = getDirContent(fullPath);
 
-	for (int i = 0; i < customName.length(); i++)
+	for (size_t i = 0; i < customName.length(); i++)
 	{
 		if (customName[i] == ' ')
 			customName[i] = '_';
 	}
 	
-	for (int i = 0; i < dirContent.size(); i++)
+	for (size_t i = 0; i < dirContent.size(); i++)
 	{
 		if (customName == dirContent.at(i))
 		{

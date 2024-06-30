@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 12:38:55 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/28 08:24:02 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/30 14:09:57 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static std::string	correctString(const std::string &str)
 {
-	int length = 0;
+	size_t length = 0;
 	while (str[length])
 		length++;
 	if (str.length() != length)

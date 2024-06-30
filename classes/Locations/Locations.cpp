@@ -6,13 +6,13 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/25 02:38:09 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/08 20:33:35 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/30 12:10:31 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Locations.hpp"
 
-static size_t	FindMethod(const std::string &method)
+static int	FindMethod(const std::string &method)
 {
 	std::string	UpperMethod = "";
 	std::string List[3] = {"GET", "POST", "DELETE"};
@@ -139,7 +139,7 @@ bool	Locations::autoIndex(void) const
 
 bool	Locations::useMethod(const std::string &methodName) const
 {
-	if (this->isRedirection() && FindMethod(methodName) >= 0)
+	if (this->isRedirection() && FindMethod(methodName) != -1)
 		return (true);
 	switch (FindMethod(methodName))
 	{

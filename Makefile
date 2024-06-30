@@ -1,5 +1,5 @@
 CXX			=	c++
-CXXFLAGS	=	-std=c++98 -g
+CXXFLAGS	=	-std=c++98 -g -Wall -Wextra -Werror
 
 CLASSES		=	classes/SysData/SysData.cpp classes/Locations/Locations.cpp\
 				classes/Servers/Servers.cpp classes/RequestData/RequestData.cpp\

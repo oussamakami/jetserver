@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/28 16:10:32 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/28 23:35:35 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/30 14:08:29 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ static void	manageClients(pollfd *clientsFDs)
 	static std::map<int, RequestData*>	RequestPackets;
 	static std::map<int, ResponseData*>	ResponsePackets;
 
-	for (int index = 0; index < global::system->getNetworkFDs().size(); index++)
+	for (size_t index = 0; index < global::system->getNetworkFDs().size(); index++)
 	{
 		if (clientsFDs[index].revents & POLLIN)
 		{
