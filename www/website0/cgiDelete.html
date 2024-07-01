@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete File</title>
+</head>
+<body>
+    <h1>Delete a File</h1>
+	<a href="./uploads" target="_blank">see the names of the files</a>
+    <form action="./uploads/delete.php" method="post" onsubmit="event.preventDefault(); deleteFile();">
+        <label for="filename">Filename:</label>
+        <input type="text" id="filename" name="filename" required>
+        <button type="submit">Delete</button>
+    </form>
+
+    <script>
+        function deleteFile() {
+            const filename = document.getElementById('filename').value;
+            fetch('./uploads/delete.php', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ filename: filename })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while deleting the file.');
+            });
+        }
+    </script>
+</body>
+</html>

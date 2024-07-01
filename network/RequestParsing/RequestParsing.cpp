@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 13:25:33 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/30 14:09:43 by okamili          ###   ########.fr       */
+/*   Updated: 2024/07/01 05:37:42 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,12 @@ static void	extractBody(const std::string &packet, RequestData &data)
 	size_t			startpos = 0;
 
 	if (boundary.empty())
+	{
+		startpos = packet.find("\r\n\r\n");
+		if (startpos != std::string::npos)
+			data.appendBody(packet.substr(startpos + 4));
 		return;
+	}
 	startpos = packet.find(boundary, packet.find(boundary) + 1);
 
 	if (startpos == std::string::npos)

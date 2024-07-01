@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 18:02:48 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/30 14:16:23 by okamili          ###   ########.fr       */
+/*   Updated: 2024/06/30 19:49:48 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,11 @@ int	checkRequestFormat(RequestData &data)
 	std::string	url;
 	std::string	Encoding;
 	std::string	allowedChars;
-	const Locations	*route = data.getServer()->getRoute(url);
+	const Locations	*route;
 
 
 	url = data.getPath();
+	route = data.getServer()->getRoute(url);
 	Encoding = data.getMetaData("Transfer-Encoding");
 	allowedChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~:/?#[]@!$&'()*+,;=%";
 	
@@ -56,7 +57,7 @@ static bool	isRedirection(ResponseData	&Packet)
 	if (Route->isRedirection())
 		return (Packet.redirect(Route->getRedirection(), Route->isRedirectionHard()));
 
-	if (isFolder(Packet.getRequestPacket()->getFullPath()) && Packet.getRequestPacket()->getMethod() != "POST")
+	if (isFolder(Packet.getRequestPacket()->getFullPath()) && Packet.getRequestPacket()->getMethod() == "GET")
 	{
 		if (requestPath[requestPath.length() - 1] != '/')
 		{
@@ -95,7 +96,7 @@ void	generateResponse(int clientFD, ResponseData &packet)
 	else if (packet.getRequestPacket()->getMethod() == "POST")
 		handlePost(packet);
 	else if (packet.getRequestPacket()->getMethod() == "DELETE")
-		packet.setStatusCode(501);
+		handleDelete(packet);
 	else
 		packet.setStatusCode(501);
 

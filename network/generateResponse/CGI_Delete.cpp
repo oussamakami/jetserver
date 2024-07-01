@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   CGI_Post.cpp                                       :+:      :+:    :+:   */
+/*   CGI_Delete.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/28 07:59:48 by okamili           #+#    #+#             */
-/*   Updated: 2024/07/01 05:29:39 by okamili          ###   ########.fr       */
+/*   Created: 2024/06/30 16:54:39 by okamili           #+#    #+#             */
+/*   Updated: 2024/07/01 05:40:30 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,9 +38,7 @@ static std::string	extractContentType(ResponseData &Packet, const std::string &o
 	return (result);
 }
 
-
-
-void	CGI_Post(ResponseData &Packet, const std::string &filePath)
+void	CGI_Delete(ResponseData &Packet, const std::string &filePath)
 {
 	std::string	command;
 	std::string	output;
@@ -54,31 +52,33 @@ void	CGI_Post(ResponseData &Packet, const std::string &filePath)
 
 	shell.addEnv("SERVER_PROTOCOL", Packet.getRequestPacket()->getProtocol());
 	shell.addEnv("GATEWAY_INTERFACE", "CGI/1.1");
-	shell.addEnv("REQUEST_METHOD", "POST");
+	shell.addEnv("REQUEST_METHOD", "DELETE");
 	shell.addEnv("SCRIPT_FILENAME", filePath);
+	shell.addEnv("QUERY_STRING", Packet.getRequestPacket()->getMetaData("QueryString"));
 	shell.addEnv("REMOTE_ADDR", Packet.getRequestPacket()->getClientIP());
 	shell.addEnv("SERVER_NAME", Packet.getRequestPacket()->getServer()->getHost());
 	shell.addEnv("SERVER_PORT", intToString(Packet.getRequestPacket()->getServer()->getPort()));
-	shell.addEnv("SERVER_SOFTWARE", "WebServer/1.0");
 	shell.addEnv("CONTENT_TYPE", Packet.getRequestPacket()->getMetaData("Content-Type"));
 	shell.addEnv("CONTENT_LENGTH", Packet.getRequestPacket()->getMetaData("Content-Length"));
+	shell.addEnv("SERVER_SOFTWARE", "WebServer/1.0");
 	shell.addEnv("REDIRECT_STATUS", "200");
-	shell.addEnv("PHPRC", "/tmp/web.ini");
-	
+
 	if (!Packet.getRequestPacket()->getMetaData("User-Agent").empty())
 		shell.addEnv("HTTP_USER_AGENT", Packet.getRequestPacket()->getMetaData("User-Agent"));
-	if (!Packet.getRequestPacket()->getMetaData("QueryString").empty())
-		shell.addEnv("QUERY_STRING", Packet.getRequestPacket()->getMetaData("QueryString"));
-
 	shell.setInput(Packet.getRequestPacket()->getBody());
 	shell.execute();
-
+	
 	output = extractContentType(Packet, shell.getOutput());
 
 	if (shell.getStatusCode() == STAT_SUCC)
 	{
-		Packet.setBody(output);
-		Packet.setStatusCode(200);
+		if (!output.empty())
+		{
+			Packet.setStatusCode(200);
+			Packet.setBody(output);
+		}
+		else
+			Packet.setStatusCode(204);
 	}
 	else
 	{

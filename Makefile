@@ -20,7 +20,8 @@ REQUESTS	=	network/RequestParsing/extractData.cpp network/RequestParsing/getServ
 
 RESPONSE	=	network/generateResponse/generateResponse.cpp network/generateResponse/handleGet.cpp\
 				network/generateResponse/CGI_Get.cpp network/generateResponse/handlePost.cpp\
-				network/generateResponse/CGI_Post.cpp
+				network/generateResponse/CGI_Post.cpp network/generateResponse/handleDelete.cpp\
+				network/generateResponse/CGI_Delete.cpp
 
 NETWORK		=	network/setSockets.cpp network/processReq.cpp\
 				network/startServers.cpp $(REQUESTS) $(RESPONSE)
