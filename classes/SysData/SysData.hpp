@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 03:26:09 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/30 13:20:34 by okamili          ###   ########.fr       */
+/*   Updated: 2024/07/01 07:56:40 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@
 # include <set>
 # include <map>
 
+class RequestData;
+class ResponseData;
 
 /**
  * @brief This class encapsulates system configuration settings
@@ -62,6 +64,8 @@ class SysData
 		std::set<int>				sockets;
 		std::vector<pollfd>			networkFDs;
 		std::map<int, std::string>	clientIP;
+		std::map<int, RequestData *>	Requests;
+		std::map<int, ResponseData *>	Responses;
 	public:
 
 		/**
@@ -196,6 +200,20 @@ class SysData
 		 * @return Status of The DevMode.
 		 */
 		bool	DevMode(void) const;
+
+		/**
+		 * @brief Gets the request packets for each connection file descriptor.
+		 * 
+		 * @return std::map<int, RequestData *>& Reference to the list of request packets.
+		 */
+		std::map<int, RequestData *>	&getRequestPackets(void);
+
+		/**
+		 * @brief Gets the response packets for each connection file descriptor.
+		 * 
+		 * @return std::map<int, ResponseData *>& Reference to the list of response packets.
+		 */
+		std::map<int, ResponseData *>	&getResponsePackets(void);
 };
 
 #endif

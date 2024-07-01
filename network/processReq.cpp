@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/28 16:10:32 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/30 14:08:29 by okamili          ###   ########.fr       */
+/*   Updated: 2024/07/01 07:44:43 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,9 +62,6 @@ static bool	extractReqFD(int fd)
 
 static void	manageClients(pollfd *clientsFDs)
 {
-	static std::map<int, RequestData*>	RequestPackets;
-	static std::map<int, ResponseData*>	ResponsePackets;
-
 	for (size_t index = 0; index < global::system->getNetworkFDs().size(); index++)
 	{
 		if (clientsFDs[index].revents & POLLIN)
@@ -73,11 +70,14 @@ static void	manageClients(pollfd *clientsFDs)
 				break;
 			else
 			{
-				if (RequestPackets.find(clientsFDs[index].fd) == RequestPackets.end())
-					RequestPackets[clientsFDs[index].fd] = new RequestData();
-				if (!requestParsing(clientsFDs[index].fd, *RequestPackets[clientsFDs[index].fd]))
+				if (global::system->getRequestPackets().find(clientsFDs[index].fd)
+						== global::system->getRequestPackets().end())
+					global::system->getRequestPackets()[clientsFDs[index].fd] = new RequestData();
+				if (!requestParsing(clientsFDs[index].fd, *global::system->getRequestPackets()[clientsFDs[index].fd]))
 				{
-					closeConnection(clientsFDs[index].fd, RequestPackets, ResponsePackets);
+					closeConnection(clientsFDs[index].fd,
+							global::system->getRequestPackets(),
+							global::system->getResponsePackets());
 					break;
 				}
 			}
@@ -85,27 +85,33 @@ static void	manageClients(pollfd *clientsFDs)
 		}
 		else if (clientsFDs[index].revents & POLLOUT)
 		{
-			if (!RequestPackets[clientsFDs[index].fd]->getBody().empty())
+			if (!global::system->getRequestPackets()[clientsFDs[index].fd]->getBody().empty())
 			{
-				if (RequestPackets[clientsFDs[index].fd]->getBody().length() < RequestPackets[clientsFDs[index].fd]->getSize())
+				if (global::system->getRequestPackets()[clientsFDs[index].fd]->getBody().length()
+						< global::system->getRequestPackets()[clientsFDs[index].fd]->getSize())
 					continue;
 			}
-			if (ResponsePackets.find(clientsFDs[index].fd) == ResponsePackets.end())
+			if (global::system->getResponsePackets().find(clientsFDs[index].fd) == global::system->getResponsePackets().end())
 			{
-				ResponsePackets[clientsFDs[index].fd] = new ResponseData();
-				ResponsePackets[clientsFDs[index].fd]->setRequestPacket(*RequestPackets[clientsFDs[index].fd]);
+				global::system->getResponsePackets()[clientsFDs[index].fd] = new ResponseData();
+				global::system->getResponsePackets()[clientsFDs[index].fd]->setRequestPacket
+				(*global::system->getRequestPackets()[clientsFDs[index].fd]);
 			}
-			generateResponse(clientsFDs[index].fd, *ResponsePackets[clientsFDs[index].fd]);
-			if (!ResponsePackets[clientsFDs[index].fd]->isBusy())
+			generateResponse(clientsFDs[index].fd, *global::system->getResponsePackets()[clientsFDs[index].fd]);
+			if (!global::system->getResponsePackets()[clientsFDs[index].fd]->isBusy())
 			{
-				closeConnection(clientsFDs[index].fd, RequestPackets, ResponsePackets);
+				closeConnection(clientsFDs[index].fd,
+						global::system->getRequestPackets(),
+						global::system->getResponsePackets());
 				break;
 			}
 			clientsFDs[index].events = POLLOUT | POLLERR;
 		}
 		if (clientsFDs[index].revents & POLLERR)
 		{
-			closeConnection(clientsFDs[index].fd, RequestPackets, ResponsePackets);
+			closeConnection(clientsFDs[index].fd,
+					global::system->getRequestPackets(),
+					global::system->getResponsePackets());
 			break;
 		}
 	}

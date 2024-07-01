@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 04:16:14 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/30 12:26:01 by okamili          ###   ########.fr       */
+/*   Updated: 2024/07/01 06:41:59 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,20 +35,24 @@ SysData::SysData(void)
 
 SysData::~SysData(void)
 {
-	std::vector<pollfd>::iterator	it;
+	std::vector<pollfd>::iterator			networkIterator;
+	std::map<int, RequestData *>::iterator	requestsIterator;
+	std::map<int, ResponseData *>::iterator	responseIterator;
 
 	if (this->_LogFile.is_open())
 		this->_LogFile.close();
-
-	it = this->networkFDs.begin();
-	while (it != this->networkFDs.end())
-	{
-		if (it == this->networkFDs.begin())
-			notify(std::cout, "%IClosing Socket connections.");
-		close(it->fd);
-		it++;
-	}
 	std::remove("/tmp/web.ini");
+
+	for (networkIterator = this->networkFDs.begin(); networkIterator != this->networkFDs.end(); networkIterator++)
+	{
+		if (networkIterator == this->networkFDs.begin())
+			notify(std::cout, "%IClosing Socket connections.");
+		close(networkIterator->fd);
+	}
+	for (requestsIterator = this->Requests.begin(); requestsIterator != this->Requests.end(); requestsIterator++)
+		delete (requestsIterator->second);
+	for (responseIterator = this->Responses.begin(); responseIterator != this->Responses.end(); responseIterator++)
+		delete (responseIterator->second);
 }
 
 void	SysData::setMaxBodySize(const size_t newSize)
@@ -224,4 +228,14 @@ const std::string	SysData::getClientIP(int fd)
 	if (holder != this->clientIP.end())
 		return (holder->second);
 	return ("");
+}
+
+std::map<int, RequestData *>	&SysData::getRequestPackets(void)
+{
+	return (this->Requests);
+}
+
+std::map<int, ResponseData *>	&SysData::getResponsePackets(void)
+{
+	return (this->Responses);
 }

@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 13:25:33 by okamili           #+#    #+#             */
-/*   Updated: 2024/07/01 05:37:42 by okamili          ###   ########.fr       */
+/*   Updated: 2024/07/01 12:27:48 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,19 +15,14 @@
 static std::string	readReq(int clientFD)
 {
 	int			bytesReceived;
-	int			maxBufferSize = 8192;
+	int			maxBufferSize = 1048576;
 	char		buffer[maxBufferSize];
 	std::string	httpPacket;
 
-	while (true)
-	{
-		bytesReceived = recv(clientFD, buffer, maxBufferSize, 0);
+	bytesReceived = recv(clientFD, buffer, maxBufferSize, 0);
+
+	if (bytesReceived != -1)
 		httpPacket.append(buffer, bytesReceived);
-		if (httpPacket.find("\r\n\r\n") != std::string::npos)
-			break;
-		if (bytesReceived < maxBufferSize)
-			break;
-	}
 
 	return (httpPacket);
 }
