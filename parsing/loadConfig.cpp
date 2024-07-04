@@ -6,18 +6,39 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/25 09:16:01 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/30 11:20:27 by okamili          ###   ########.fr       */
+/*   Updated: 2024/07/04 21:30:34 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.hpp"
+
+static bool fileEmpty(const std::string &path)
+{
+	std::ifstream file;
+	std::string line;
+
+	file.open(path.c_str());
+
+	while (getline(file, line))
+	{
+		line = trim(line, "\t\r\n ");
+		if (line.empty() || !std::isprint(line[0]) || line[0] == '#')
+			continue;
+		else
+		{
+			file.close();
+			return (false);
+		}
+	}
+	return (true);
+}
 
 bool	loadConfig(std::string confPath)
 {
 	std::ifstream	source;
 	std::string		trimedStr;
 
-	if (!isConfigFile(confPath) || !fileExist(confPath))
+	if (!isConfigFile(confPath) || !fileExist(confPath) || fileEmpty(confPath))
 		return (false);
 
 	source.open(confPath.c_str());

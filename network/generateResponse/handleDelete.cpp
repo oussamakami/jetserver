@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 16:53:32 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/30 19:43:21 by okamili          ###   ########.fr       */
+/*   Updated: 2024/07/04 21:16:11 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static int	deletePath(const std::string &fullPath)
 	if (fullPath.empty())
 		return (STAT_FAIL);
 	
-	command = "/usr/bin/rm -rf ";
+	command = "/bin/rm -rf ";
 	command += fullPath;
 	
 	shell.setCommand(command);
@@ -29,7 +29,7 @@ static int	deletePath(const std::string &fullPath)
 	if (command[command.length() - 1] == '/')
 	{
 		shell.clearShell();
-		command = "/usr/bin/mkdir ";
+		command = "/bin/mkdir ";
 		command += fullPath;
 
 		shell.setCommand(command);

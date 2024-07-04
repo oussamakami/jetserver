@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/09 09:07:55 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/30 13:54:31 by okamili          ###   ########.fr       */
+/*   Updated: 2024/07/04 21:25:08 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ bool	isFolder(const std::string &fullPath)
 	CommandLine		shell;
 	std::string		command;
 
-	command = "/bin/file ";
+	command = "/usr/bin/file ";
 	command += fullPath;
 	
 	shell.setCommand(command);

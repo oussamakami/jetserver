@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 07:59:48 by okamili           #+#    #+#             */
-/*   Updated: 2024/07/01 05:29:39 by okamili          ###   ########.fr       */
+/*   Updated: 2024/07/04 20:53:01 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,10 @@ void	CGI_Post(ResponseData &Packet, const std::string &filePath)
 	}
 	else
 	{
-		Packet.setStatusCode(500);
+		if (shell.getStatusCode() == STAT_TMOUT)
+			Packet.setStatusCode(504);
+		else
+			Packet.setStatusCode(500);
 		if (!output.empty())
 			Packet.setBody(output);
 	}

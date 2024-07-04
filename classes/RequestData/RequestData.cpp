@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/28 11:11:27 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/30 12:08:31 by okamili          ###   ########.fr       */
+/*   Updated: 2024/07/04 21:16:23 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,12 +109,20 @@ void	RequestData::addMetaData(const std::string &key, const std::string &value)
 
 void	RequestData::setServer(Servers *Data)
 {
+	std::string	temp;
+	size_t		index;
 	this->_Server = Data;
 	
 	if (Data)
 	{
 		this->_Route = Data->getRoute(this->getPath());
 		this->_FullPath = generateFullPath(this->getPath(), this->_Route->getRoot());
+		temp = this->_Route->getPath();
+		if (temp[temp.length() -1] == '/')
+			temp.erase(temp.length() -1);
+		index = this->_FullPath.find(temp);
+		if (index != std::string::npos)
+			this->_FullPath.erase(index, temp.length());
 	}
 }
 

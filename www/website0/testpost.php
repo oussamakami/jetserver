@@ -6,7 +6,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $username = $_POST['username'];
         echo "Username: " . htmlspecialchars($username) . "<br>";
     }
-
     // Check if profile picture is uploaded
     if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] == UPLOAD_ERR_OK) {
         $uploadDir = './uploads/'; // Replace with your desired upload directory

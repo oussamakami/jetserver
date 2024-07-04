@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:46:47 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/29 01:25:44 by okamili          ###   ########.fr       */
+/*   Updated: 2024/07/04 21:29:22 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -221,10 +221,12 @@ bool	ResponseData::readFile(const std::string &path)
 	return (true);
 }
 
-bool	ResponseData::sendResponse(int fd)
+bool ResponseData::sendResponse(int fd)
 {
-	size_t		bufferSize = 1048576;
-	std::string	response;
+	static size_t	totalSent;
+	int				sentBytes = 0;
+	size_t			bytesToSend = 0;
+	std::string		response;
 
 	if (!isBusy())
 	{
@@ -233,13 +235,33 @@ bool	ResponseData::sendResponse(int fd)
 			return (false);
 		captureLog(*this);
 	}
-	response = _Packet.substr(0, bufferSize);
-	if (send(fd, response.c_str(), response.length(), 0) == -1)
+	if (_Packet.size() < 1048576)
+	{
+		sentBytes = send(fd, _Packet.c_str(), _Packet.length(), 0);
+		_Packet = "";
+		totalSent = 0;
+		return (sentBytes != -1);
+	}
+	if (totalSent >= _Packet.size())
 	{
 		_Packet = "";
+		totalSent = 0;
+		return (true);
+	}
+
+	bytesToSend = std::min(_Packet.size() - totalSent, (size_t)1048576);
+	response = _Packet.substr(totalSent, bytesToSend);
+
+	sentBytes = send(fd, response.c_str(), response.length(), 0);
+
+	if (sentBytes == -1)
+	{
+		_Packet = "";
+		totalSent = 0;
 		return (false);
 	}
-	_Packet.erase(0, bufferSize);
+	totalSent += sentBytes;
+
 	return (true);
 }
 

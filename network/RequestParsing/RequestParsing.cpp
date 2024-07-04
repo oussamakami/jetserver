@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 13:25:33 by okamili           #+#    #+#             */
-/*   Updated: 2024/07/01 12:27:48 by okamili          ###   ########.fr       */
+/*   Updated: 2024/07/01 20:52:30 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,8 @@ bool	requestParsing(int clientFD, RequestData &packetData)
 	clientPacket = readReq(clientFD);
 	if (!packetData.getClientIP().empty())
 	{
-		packetData.appendBody(clientPacket);
+		if (packetData.getBody().length() < packetData.getSize())
+			packetData.appendBody(clientPacket);
 		return (true);
 	}
 	packetData.setClientIP(global::system->getClientIP(clientFD));
