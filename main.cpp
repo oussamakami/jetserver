@@ -6,7 +6,7 @@
 /*   By: okamili <okamili@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 03:50:48 by okamili           #+#    #+#             */
-/*   Updated: 2024/06/28 07:39:15 by okamili          ###   ########.fr       */
+/*   Updated: 2024/07/08 15:53:56 by okamili          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ static void handleArgs(int argc, char **argv)
 	}
 	if (!status)
 		terminate(2);
+	if (std::getenv("IS_CONTAINER"))
+		global::system->setLogPath("/dev/stdout");
 }
 
 int main(int argc, char **argv)
