@@ -32,7 +32,7 @@ void	captureLog(ResponseData &Packet)
 {
 	std::stringstream	Log;
 	
-	Log << getCurrentDate() << " [WebServer] Host: ";
+	Log << getCurrentDate() << " [JetServer] Host: ";
 	Log << Packet.getRequestPacket()->getMetaData("Host");
 	Log << ", IP: " << Packet.getRequestPacket()->getClientIP();
 	Log << " -> (" << Packet.getRequestPacket()->getMethod();

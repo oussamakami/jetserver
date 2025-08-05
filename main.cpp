@@ -23,7 +23,7 @@ static void handleArgs(int argc, char **argv)
 	switch (argc)
 	{
 		case 1:
-			status = loadConfig("./webserver.conf");
+			status = loadConfig("./jetserver.conf");
 			break;
 		case 2:
 			status = loadConfig(argv[1]);

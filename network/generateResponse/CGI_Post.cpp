@@ -59,7 +59,7 @@ void	CGI_Post(ResponseData &Packet, const std::string &filePath)
 	shell.addEnv("REMOTE_ADDR", Packet.getRequestPacket()->getClientIP());
 	shell.addEnv("SERVER_NAME", Packet.getRequestPacket()->getServer()->getHost());
 	shell.addEnv("SERVER_PORT", intToString(Packet.getRequestPacket()->getServer()->getPort()));
-	shell.addEnv("SERVER_SOFTWARE", "WebServer/1.0");
+	shell.addEnv("SERVER_SOFTWARE", "JetServer/1.0");
 	shell.addEnv("CONTENT_TYPE", Packet.getRequestPacket()->getMetaData("Content-Type"));
 	shell.addEnv("CONTENT_LENGTH", Packet.getRequestPacket()->getMetaData("Content-Length"));
 	shell.addEnv("REDIRECT_STATUS", "200");

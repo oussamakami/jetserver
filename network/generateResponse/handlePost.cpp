@@ -167,10 +167,10 @@ static int	handleBody(ResponseData &Packet)
 			statusCode = 500;
 	}
 
-	packetResponse = "<!DOCTYPE html><html lang=\"en\"><head><title>webServer v1.0</title>";
+	packetResponse = "<!DOCTYPE html><html lang=\"en\"><head><title>JetServer v1.0</title>";
 	packetResponse += "</head><body><center><h1 style=\"font-family: sans-serif;\">File(s) ";
 	packetResponse += "uploaded successfully</h1><a href=\"/\">Go to homepage</a><hr><h3 ";
-	packetResponse += "style=\"font-family: monospace;\">webServer v1.0</h3></center></body></html>";
+	packetResponse += "style=\"font-family: monospace;\">JetServer v1.0</h3></center></body></html>";
 	
 	if (statusCode == 201)
 		Packet.setBody(packetResponse);

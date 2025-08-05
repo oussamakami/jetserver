@@ -64,7 +64,7 @@ void	CGI_Get(ResponseData &Packet, const std::string &filePath)
 	shell.addEnv("REMOTE_ADDR", Packet.getRequestPacket()->getClientIP());
 	shell.addEnv("SERVER_NAME", Packet.getRequestPacket()->getServer()->getHost());
 	shell.addEnv("SERVER_PORT", intToString(Packet.getRequestPacket()->getServer()->getPort()));
-	shell.addEnv("SERVER_SOFTWARE", "WebServer/1.0");
+	shell.addEnv("SERVER_SOFTWARE", "JetServer/1.0");
 	shell.addEnv("REDIRECT_STATUS", "200");
 
 	if (!Packet.getRequestPacket()->getMetaData("User-Agent").empty())

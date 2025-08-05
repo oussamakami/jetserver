@@ -60,7 +60,7 @@ void	CGI_Delete(ResponseData &Packet, const std::string &filePath)
 	shell.addEnv("SERVER_PORT", intToString(Packet.getRequestPacket()->getServer()->getPort()));
 	shell.addEnv("CONTENT_TYPE", Packet.getRequestPacket()->getMetaData("Content-Type"));
 	shell.addEnv("CONTENT_LENGTH", Packet.getRequestPacket()->getMetaData("Content-Length"));
-	shell.addEnv("SERVER_SOFTWARE", "WebServer/1.0");
+	shell.addEnv("SERVER_SOFTWARE", "JetServer/1.0");
 	shell.addEnv("REDIRECT_STATUS", "200");
 
 	if (!Packet.getRequestPacket()->getMetaData("User-Agent").empty())

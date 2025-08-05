@@ -43,7 +43,7 @@ static const std::string	generateErrorPage(const size_t errorNum, const std::str
 		result << "HTTP Error Code: " << errorNum << "</h1><hr><h3 style=\"font-family:";
 	else
 		result << errorNum << " - " << msg << "</h1><hr><h3 style=\"font-family:";
-	result << " monospace;\">webServer v1.0</h3></center></body></html>";
+	result << " monospace;\">JetServer v1.0</h3></center></body></html>";
 	
 	
 

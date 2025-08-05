@@ -223,7 +223,6 @@ bool	ResponseData::readFile(const std::string &path)
 
 bool ResponseData::sendResponse(int fd)
 {
-	static size_t	totalSent;
 	int				sentBytes = 0;
 	size_t			bytesToSend = 0;
 	std::string		response;
@@ -239,28 +238,28 @@ bool ResponseData::sendResponse(int fd)
 	{
 		sentBytes = send(fd, _Packet.c_str(), _Packet.length(), 0);
 		_Packet = "";
-		totalSent = 0;
+		_totalSent = 0;
 		return (sentBytes != -1);
 	}
-	if (totalSent >= _Packet.size())
+	if (_totalSent >= _Packet.size())
 	{
 		_Packet = "";
-		totalSent = 0;
+		_totalSent = 0;
 		return (true);
 	}
 
-	bytesToSend = std::min(_Packet.size() - totalSent, (size_t)1048576);
-	response = _Packet.substr(totalSent, bytesToSend);
+	bytesToSend = std::min(_Packet.size() - _totalSent, (size_t)1048576);
+	response = _Packet.substr(_totalSent, bytesToSend);
 
 	sentBytes = send(fd, response.c_str(), response.length(), 0);
 
 	if (sentBytes == -1)
 	{
 		_Packet = "";
-		totalSent = 0;
+		_totalSent = 0;
 		return (false);
 	}
-	totalSent += sentBytes;
+	_totalSent += sentBytes;
 
 	return (true);
 }
@@ -283,8 +282,9 @@ ResponseData::ResponseData(void)
 	_Head = "";
 	_Body = "";
 	_Packet = "";
+	_totalSent = 0;
 	_requestPacket = NULL;
-	setMetaData("Server", "webServer/1.0");
+	setMetaData("Server", "JetServer/1.0");
 }
 
 ResponseData::~ResponseData(void)

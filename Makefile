@@ -28,7 +28,7 @@ NETWORK		=	network/setSockets.cpp network/processReq.cpp\
 
 FILES		=	$(CLASSES) $(TOOLS) $(PARSING) $(NETWORK) main.cpp
 OBJ			=	$(FILES:.cpp=.o)
-NAME		=	webserver
+NAME		=	jetserver
 
 all:		$(NAME)
 
@@ -36,17 +36,17 @@ $(NAME):	$(OBJ)
 	$(CXX) $(CXXFLAGS) $(OBJ) -o $(NAME)
 
 docker_img:
-	docker build -t webserver:latest .
+	docker build -t jetserver:latest .
 
 docker_kill:
-	docker kill webserver 2>/dev/null || true
-	docker rm webserver 2>/dev/null || true
+	docker kill jetserver 2>/dev/null || true
+	docker rm jetserver 2>/dev/null || true
 
 docker_run:		all docker_kill
-	docker run --rm --name webserver -v $(shell pwd):/data --network host -e "IS_CONTAINER=true" -d webserver:latest
+	docker run --rm --name jetserver -v $(shell pwd):/data --network host -e "IS_CONTAINER=true" -d jetserver:latest
 
 docker_clean: fclean docker_kill
-	docker image rm -f webserver:latest
+	docker image rm -f jetserver:latest
 
 clean:
 	rm -rf $(OBJ)

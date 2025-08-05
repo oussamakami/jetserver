@@ -32,7 +32,7 @@ std::string	generateDirPage(const std::string &DirPath, const std::string &Reque
 	std::string					temp;
 	std::vector<std::string>	files;
 
-	result = "<!DOCTYPE html><html lang=\"en\"><head><title>webServer v1.0</title></head>";
+	result = "<!DOCTYPE html><html lang=\"en\"><head><title>JetServer v1.0</title></head>";
 	result += "<body><center><h1 style=\"font-family: sans-serif;\">List Of Content:</h1><hr>";
 
 	files = getDirContent(DirPath);
@@ -47,7 +47,7 @@ std::string	generateDirPage(const std::string &DirPath, const std::string &Reque
 		
 		result += temp;
 	}
-	result += "<hr><h2 style=\"font-family: monospace;\">webServer v1.0</h2></center></body></html>";
+	result += "<hr><h2 style=\"font-family: monospace;\">JetServer v1.0</h2></center></body></html>";
 	return (result);
 }
 

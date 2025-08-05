@@ -43,6 +43,7 @@ class ResponseData
 		std::string							_Head;
 		std::string							_Body;
 		std::string							_Packet;
+		size_t								_totalSent;
 
 		std::map<int, std::string>			_StatusTypes;
 		std::map<std::string, std::string>	_MimeTypes;
