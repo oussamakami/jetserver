@@ -12,7 +12,7 @@
 
 #include "tools.hpp"
 
-static void	typeHandler(std::ostream &outStream, char type, va_list args)
+static void	typeHandler(std::ostream &outStream, char type, va_list &args)
 {
 	if (type == 'c' || type == 'd')
 		outStream << va_arg(args, int);
