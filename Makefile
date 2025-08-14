@@ -1,5 +1,5 @@
 CXX			=	c++
-CXXFLAGS	=	-std=c++98 -g -Wall -Wextra -Werror --static
+CXXFLAGS	=	-std=c++98 -g -Wall -Wextra -Werror
 
 CLASSES		=	classes/SysData/SysData.cpp classes/Locations/Locations.cpp\
 				classes/Servers/Servers.cpp classes/RequestData/RequestData.cpp\
@@ -35,18 +35,19 @@ all:		$(NAME)
 $(NAME):	$(OBJ)
 	$(CXX) $(CXXFLAGS) $(OBJ) -o $(NAME)
 
-docker_img:
-	docker build -t jetserver:latest .
+docker_build:
+	docker build -t $(NAME):latest .
 
 docker_kill:
-	docker kill jetserver 2>/dev/null || true
-	docker rm jetserver 2>/dev/null || true
+	docker kill $(NAME) 2>/dev/null || true
+	docker rm $(NAME) 2>/dev/null || true
 
-docker_run:		all docker_kill
-	docker run --rm --name jetserver -v $(shell pwd):/data --network host -e "IS_CONTAINER=true" -d jetserver:latest
+docker_run:	docker_kill docker_build
+	docker run --name $(NAME) -v $(shell pwd)/www/:/data/www \
+	--network host -e "IS_CONTAINER=true" -d $(NAME):latest
 
-docker_clean: fclean docker_kill
-	docker image rm -f jetserver:latest
+docker_rmi: docker_kill
+	docker image rm -f $(NAME):latest
 
 clean:
 	rm -rf $(OBJ)

@@ -1,7 +1,11 @@
 FROM alpine:latest
 
-RUN apk update && apk add file php-cgi && mkdir /data
+COPY . /data
+
+VOLUME ["/data/www"]
 
 WORKDIR /data
+
+RUN apk update && apk add --no-cache file php-cgi build-base && make re
 
 CMD ["./jetserver"]

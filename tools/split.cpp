@@ -23,7 +23,7 @@ std::vector<std::string> split(const std::string &str, const std::string &delimi
 		end = str.find(delimiter, start);
 
 		holder = str.substr(start, end - start);
-		if (holder[holder.length() - 1] == '\r')
+		if (!holder.empty() && holder[holder.length() - 1] == '\r')
 			holder[holder.length() - 1] = '\0';
 
 		result.push_back(holder);

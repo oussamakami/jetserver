@@ -32,7 +32,10 @@ static void handleArgs(int argc, char **argv)
 			notify(std::cerr, "%EInvalid number of arguments.");
 	}
 	if (!status)
+	{
+		notify(std::cerr, "%EUnable to load configuration file. Please check that the file exists and has the correct permissions.");
 		terminate(2);
+	}
 	if (std::getenv("IS_CONTAINER"))
 		global::system->setLogPath("/dev/stdout");
 }
